@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { CelebrationEffects } from './CelebrationEffects';
 import { AchievementNotification } from './AchievementNotification';
@@ -114,6 +113,20 @@ export const InteractiveSystem = () => {
       message: 'Not bad, but tomorrow we go harder! What can you do better?',
       type: 'motivational',
       emoji: '🌅'
+    },
+    {
+      id: 'missed_calls_pressure',
+      title: '📞 Pressure dey here — follow up now!',
+      message: 'Your missed calls need immediate attention! Don\'t lose that money!',
+      type: 'urgent',
+      emoji: '📞'
+    },
+    {
+      id: 'pending_uploads_red_zone',
+      title: '🚨 Red zone: Upload your recording now!',
+      message: 'Time is ticking! Upload that call recording before you lose your bonus!',
+      type: 'urgent',
+      emoji: '🚨'
     }
   ];
 

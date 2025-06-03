@@ -20,7 +20,7 @@ export const TodayMissionCard = () => {
           <Target className="w-8 h-8 text-white" />
         )}
         <h2 className="text-xl font-bold flex items-center gap-2">
-          {isUrgent ? '🚨 WAHALA DEY!' : '🎯 YOU DEY TRY!'} TODAY'S MISSION
+          {isUrgent ? '🚨 PRESSURE DEY!' : '🎯 YOU DEY TRY!'} TODAY'S MISSION
         </h2>
         <Flame className="w-6 h-6 text-amber-200" />
       </div>
@@ -28,7 +28,7 @@ export const TodayMissionCard = () => {
       <div className="mb-4">
         <h3 className="text-2xl font-bold mb-2">
           {isUrgent 
-            ? '🔥 Wahala dey! 3 more orders or no bonus today!'
+            ? '🔥 Pressure dey! 3 more orders or no bonus today!'
             : '✅ You dey fire! 3 more for ₦2,000 bonus!'
           }
         </h3>
