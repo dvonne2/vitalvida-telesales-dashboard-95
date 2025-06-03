@@ -18,7 +18,7 @@ interface MotivationalPopupProps {
 
 export const MotivationalPopup = ({ message, onDismiss }: MotivationalPopupProps) => {
   const [isVisible, setIsVisible] = useState(false);
-  const { playSound } = useSoundEffects();
+  const { playSound, stopSound } = useSoundEffects();
 
   useEffect(() => {
     if (message) {
@@ -26,13 +26,18 @@ export const MotivationalPopup = ({ message, onDismiss }: MotivationalPopupProps
       playSound(message.type === 'urgent' ? 'warning' : 'success');
       
       const timer = setTimeout(() => {
-        setIsVisible(false);
-        setTimeout(onDismiss, 300);
+        handleClose();
       }, 3500);
       
       return () => clearTimeout(timer);
     }
-  }, [message, onDismiss, playSound]);
+  }, [message, playSound]);
+
+  const handleClose = () => {
+    stopSound(); // Stop any playing sound
+    setIsVisible(false);
+    setTimeout(onDismiss, 300);
+  };
 
   if (!message) return null;
 
@@ -68,7 +73,7 @@ export const MotivationalPopup = ({ message, onDismiss }: MotivationalPopupProps
                 <span className="text-2xl">{message.emoji}</span>
               </div>
               <button 
-                onClick={() => setIsVisible(false)}
+                onClick={handleClose}
                 className="text-white/70 hover:text-white transition-colors"
               >
                 <X className="w-5 h-5" />

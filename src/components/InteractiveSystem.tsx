@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { CelebrationEffects } from './CelebrationEffects';
 import { AchievementNotification } from './AchievementNotification';
 import { MotivationalPopup } from './MotivationalPopup';
@@ -24,6 +24,10 @@ export const InteractiveSystem = () => {
   const [celebration, setCelebration] = useState<{ isActive: boolean; type: 'order' | 'bonus' | 'target' | 'daily' }>({ isActive: false, type: 'order' });
   const [currentAchievement, setCurrentAchievement] = useState<Achievement | null>(null);
   const [currentMessage, setCurrentMessage] = useState<MotivationalMessage | null>(null);
+  
+  // Track shown messages to prevent repeats
+  const shownMessages = useRef<Set<string>>(new Set());
+  const shownAchievements = useRef<Set<string>>(new Set());
 
   // Sample achievements and messages that could be triggered
   const achievements: Achievement[] = [
@@ -47,6 +51,20 @@ export const InteractiveSystem = () => {
       message: 'Under 5 minutes response time! You dey fire!',
       type: 'streak',
       points: 250
+    },
+    {
+      id: 'daily_target',
+      title: 'Target Crusher! 🎯',
+      message: 'You smashed your daily target! Champion energy!',
+      type: 'target',
+      points: 750
+    },
+    {
+      id: 'week_streak',
+      title: 'Week Warrior! 🔥',
+      message: 'Five days straight of hitting targets! Unstoppable!',
+      type: 'streak',
+      points: 1000
     }
   ];
 
@@ -71,6 +89,20 @@ export const InteractiveSystem = () => {
       message: 'Call customers within 10 minutes - 85% higher close rate!',
       type: 'tip',
       emoji: '🎯'
+    },
+    {
+      id: 'end_of_day_push',
+      title: 'Final Sprint! 🏃‍♂️',
+      message: 'Last 2 hours! One more order can change your day!',
+      type: 'motivational',
+      emoji: '⚡'
+    },
+    {
+      id: 'bonus_reminder',
+      title: 'Money Alert! 💸',
+      message: 'You\'re ₦1,500 away from next bonus tier! Keep grinding!',
+      type: 'celebration',
+      emoji: '💰'
     }
   ];
 
@@ -85,20 +117,28 @@ export const InteractiveSystem = () => {
       const random = Math.random();
       
       if (random < 0.2) {
-        // Show motivational message
-        const randomMessage = motivationalMessages[Math.floor(Math.random() * motivationalMessages.length)];
-        setCurrentMessage(randomMessage);
+        // Show motivational message - but only if not shown before
+        const availableMessages = motivationalMessages.filter(msg => !shownMessages.current.has(msg.id));
+        if (availableMessages.length > 0) {
+          const randomMessage = availableMessages[Math.floor(Math.random() * availableMessages.length)];
+          shownMessages.current.add(randomMessage.id);
+          setCurrentMessage(randomMessage);
+        }
       } else if (random < 0.3) {
-        // Show achievement
-        const randomAchievement = achievements[Math.floor(Math.random() * achievements.length)];
-        setCurrentAchievement(randomAchievement);
+        // Show achievement - but only if not shown before
+        const availableAchievements = achievements.filter(ach => !shownAchievements.current.has(ach.id));
+        if (availableAchievements.length > 0) {
+          const randomAchievement = availableAchievements[Math.floor(Math.random() * availableAchievements.length)];
+          shownAchievements.current.add(randomAchievement.id);
+          setCurrentAchievement(randomAchievement);
+        }
       } else if (random < 0.35) {
         // Trigger celebration
         const celebrationTypes: Array<'order' | 'bonus' | 'target' | 'daily'> = ['order', 'bonus', 'target', 'daily'];
         const randomType = celebrationTypes[Math.floor(Math.random() * celebrationTypes.length)];
         setCelebration({ isActive: true, type: randomType });
       }
-    }, 20000); // Every 20 seconds instead of 15
+    }, 25000); // Every 25 seconds to give more breathing room
 
     return () => clearInterval(eventInterval);
   }, [currentAchievement, currentMessage, celebration.isActive]);

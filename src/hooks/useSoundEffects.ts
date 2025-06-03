@@ -3,9 +3,28 @@ import { useCallback, useRef } from 'react';
 
 let isPlaying = false;
 let currentOscillator: OscillatorNode | null = null;
+let currentGainNode: GainNode | null = null;
 
 export const useSoundEffects = () => {
   const lastSoundTime = useRef(0);
+
+  const stopSound = useCallback(() => {
+    if (currentOscillator && currentGainNode) {
+      try {
+        // Fade out quickly instead of abrupt stop
+        currentGainNode.gain.exponentialRampToValueAtTime(0.001, currentGainNode.context.currentTime + 0.1);
+        currentOscillator.stop(currentGainNode.context.currentTime + 0.1);
+        currentOscillator = null;
+        currentGainNode = null;
+        isPlaying = false;
+      } catch (e) {
+        // Ignore errors when stopping already stopped oscillator
+        currentOscillator = null;
+        currentGainNode = null;
+        isPlaying = false;
+      }
+    }
+  }, []);
 
   const playSound = useCallback((type: 'success' | 'warning' | 'click' | 'bonus' | 'celebration') => {
     // Prevent overlapping sounds - minimum 500ms between sounds
@@ -15,14 +34,7 @@ export const useSoundEffects = () => {
     }
 
     // Stop any currently playing sound
-    if (currentOscillator) {
-      try {
-        currentOscillator.stop();
-        currentOscillator = null;
-      } catch (e) {
-        // Ignore errors when stopping already stopped oscillator
-      }
-    }
+    stopSound();
 
     if (isPlaying) return;
 
@@ -35,6 +47,7 @@ export const useSoundEffects = () => {
       const gainNode = audioContext.createGain();
       
       currentOscillator = oscillator;
+      currentGainNode = gainNode;
       
       oscillator.connect(gainNode);
       gainNode.connect(audioContext.destination);
@@ -68,13 +81,15 @@ export const useSoundEffects = () => {
       oscillator.onended = () => {
         isPlaying = false;
         currentOscillator = null;
+        currentGainNode = null;
       };
     } catch (error) {
       isPlaying = false;
       currentOscillator = null;
+      currentGainNode = null;
       console.log('Audio not supported or blocked');
     }
-  }, []);
+  }, [stopSound]);
 
-  return { playSound };
+  return { playSound, stopSound };
 };
