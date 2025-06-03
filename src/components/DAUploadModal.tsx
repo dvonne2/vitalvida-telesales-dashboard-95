@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from './ui/dialog';
 import { Upload, X, Truck, CheckCircle } from 'lucide-react';
 import { InteractiveButton } from './InteractiveButton';
 import { useSoundEffects } from '../hooks/useSoundEffects';
@@ -18,12 +18,16 @@ export const DAUploadModal = ({ isOpen, onClose, orderId, customerName, onUpload
   const [isCompleted, setIsCompleted] = useState(false);
   const { playSound } = useSoundEffects();
 
+  console.log('DAUploadModal render:', { isOpen, orderId, isUploading, isCompleted });
+
   const handleUpload = () => {
+    console.log('DAUploadModal: Starting upload process');
     setIsUploading(true);
     playSound('whoosh');
     
     // Simulate upload process
     setTimeout(() => {
+      console.log('DAUploadModal: Upload completed');
       setIsUploading(false);
       setIsCompleted(true);
       
@@ -42,6 +46,7 @@ export const DAUploadModal = ({ isOpen, onClose, orderId, customerName, onUpload
   };
 
   const handleClose = () => {
+    console.log('DAUploadModal: Closing modal');
     setIsUploading(false);
     setIsCompleted(false);
     onClose();
@@ -64,6 +69,9 @@ export const DAUploadModal = ({ isOpen, onClose, orderId, customerName, onUpload
               <X className="w-5 h-5" />
             </button>
           </div>
+          <DialogDescription className="text-sm text-gray-600">
+            Upload screenshot or document that shows order #{orderId} was assigned to a delivery agent.
+          </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">

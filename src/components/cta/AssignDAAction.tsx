@@ -5,6 +5,7 @@ import { ActionButton } from './ActionButton';
 import { DAUploadModal } from '../DAUploadModal';
 import { ActionStatus, logAction } from '../../utils/ctaUtils';
 import { useSoundEffects } from '../../hooks/useSoundEffects';
+import { ErrorBoundary } from '../ErrorBoundary';
 
 interface AssignDAActionProps {
   status: ActionStatus;
@@ -30,9 +31,15 @@ export const AssignDAAction = ({
   const [showDAUploadModal, setShowDAUploadModal] = useState(false);
   const { playSound } = useSoundEffects();
 
+  console.log('AssignDAAction render:', { orderId, status, disabled, showDAUploadModal });
+
   const handleAssignDA = () => {
-    if (disabled) return;
+    if (disabled) {
+      console.log('AssignDAAction: Button disabled, ignoring click');
+      return;
+    }
     
+    console.log('AssignDAAction: Opening DA upload modal');
     setShowDAUploadModal(true);
     onShowWhisper('assign');
     playSound('alert_ping');
@@ -41,6 +48,7 @@ export const AssignDAAction = ({
   };
 
   const handleDAUploadComplete = () => {
+    console.log('AssignDAAction: DA upload completed');
     setShowDAUploadModal(false);
     onUpdateStatus('completed');
     onDisableButton();
@@ -49,7 +57,7 @@ export const AssignDAAction = ({
   };
 
   return (
-    <>
+    <ErrorBoundary>
       <ActionButton
         title="🚚 ASSIGN DA"
         icon={Truck}
@@ -62,13 +70,15 @@ export const AssignDAAction = ({
         variant="primary"
       />
 
-      <DAUploadModal
-        isOpen={showDAUploadModal}
-        onClose={() => setShowDAUploadModal(false)}
-        orderId={orderId}
-        customerName={customerName}
-        onUploadComplete={handleDAUploadComplete}
-      />
-    </>
+      <ErrorBoundary>
+        <DAUploadModal
+          isOpen={showDAUploadModal}
+          onClose={() => setShowDAUploadModal(false)}
+          orderId={orderId}
+          customerName={customerName}
+          onUploadComplete={handleDAUploadComplete}
+        />
+      </ErrorBoundary>
+    </ErrorBoundary>
   );
 };

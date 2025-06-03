@@ -5,6 +5,7 @@ import { ActionButton } from './ActionButton';
 import { PaymentUploadModal } from '../PaymentUploadModal';
 import { ActionStatus, logAction } from '../../utils/ctaUtils';
 import { useSoundEffects } from '../../hooks/useSoundEffects';
+import { ErrorBoundary } from '../ErrorBoundary';
 
 interface PaymentActionProps {
   status: ActionStatus;
@@ -30,9 +31,15 @@ export const PaymentAction = ({
   const [showPaymentUploadModal, setShowPaymentUploadModal] = useState(false);
   const { playSound } = useSoundEffects();
 
+  console.log('PaymentAction render:', { orderId, status, disabled, showPaymentUploadModal });
+
   const handlePaymentConfirmed = () => {
-    if (disabled) return;
+    if (disabled) {
+      console.log('PaymentAction: Button disabled, ignoring click');
+      return;
+    }
     
+    console.log('PaymentAction: Opening payment upload modal');
     setShowPaymentUploadModal(true);
     onShowWhisper('payment');
     playSound('alert_ping');
@@ -41,6 +48,7 @@ export const PaymentAction = ({
   };
 
   const handlePaymentUploadComplete = () => {
+    console.log('PaymentAction: Payment upload completed');
     setShowPaymentUploadModal(false);
     onUpdateStatus('completed');
     onDisableButton();
@@ -49,7 +57,7 @@ export const PaymentAction = ({
   };
 
   return (
-    <>
+    <ErrorBoundary>
       <ActionButton
         title="💰 PAYMENT"
         icon={DollarSign}
@@ -62,13 +70,15 @@ export const PaymentAction = ({
         variant="success"
       />
 
-      <PaymentUploadModal
-        isOpen={showPaymentUploadModal}
-        onClose={() => setShowPaymentUploadModal(false)}
-        orderId={orderId}
-        customerName={customerName}
-        onUploadComplete={handlePaymentUploadComplete}
-      />
-    </>
+      <ErrorBoundary>
+        <PaymentUploadModal
+          isOpen={showPaymentUploadModal}
+          onClose={() => setShowPaymentUploadModal(false)}
+          orderId={orderId}
+          customerName={customerName}
+          onUploadComplete={handlePaymentUploadComplete}
+        />
+      </ErrorBoundary>
+    </ErrorBoundary>
   );
 };

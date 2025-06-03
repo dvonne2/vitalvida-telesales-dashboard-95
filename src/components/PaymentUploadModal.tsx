@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from './ui/dialog';
 import { Upload, X, DollarSign, CheckCircle } from 'lucide-react';
 import { InteractiveButton } from './InteractiveButton';
 import { useSoundEffects } from '../hooks/useSoundEffects';
@@ -18,12 +18,16 @@ export const PaymentUploadModal = ({ isOpen, onClose, orderId, customerName, onU
   const [isCompleted, setIsCompleted] = useState(false);
   const { playSound } = useSoundEffects();
 
+  console.log('PaymentUploadModal render:', { isOpen, orderId, isUploading, isCompleted });
+
   const handleUpload = () => {
+    console.log('PaymentUploadModal: Starting upload process');
     setIsUploading(true);
     playSound('cash_register');
     
     // Simulate upload process
     setTimeout(() => {
+      console.log('PaymentUploadModal: Upload completed');
       setIsUploading(false);
       setIsCompleted(true);
       
@@ -42,6 +46,7 @@ export const PaymentUploadModal = ({ isOpen, onClose, orderId, customerName, onU
   };
 
   const handleClose = () => {
+    console.log('PaymentUploadModal: Closing modal');
     setIsUploading(false);
     setIsCompleted(false);
     onClose();
@@ -64,6 +69,9 @@ export const PaymentUploadModal = ({ isOpen, onClose, orderId, customerName, onU
               <X className="w-5 h-5" />
             </button>
           </div>
+          <DialogDescription className="text-sm text-gray-600">
+            Upload screenshot of Moniepoint payment or confirmation for order #{orderId}.
+          </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">
