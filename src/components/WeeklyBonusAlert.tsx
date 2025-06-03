@@ -50,21 +50,21 @@ export const WeeklyBonusAlert = ({
 
   return (
     <div 
-      className={`fixed top-24 left-1/2 transform -translate-x-1/2 z-[60] w-11/12 max-w-md transition-all duration-300 ${
+      className={`fixed top-28 left-1/2 transform -translate-x-1/2 z-[70] w-11/12 max-w-md transition-all duration-300 ${
         isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
       }`}
     >
       <div className="bg-gradient-to-r from-[#00c853] to-[#009624] rounded-xl p-6 text-white shadow-2xl relative">
-        {/* Close Button */}
+        {/* Close Button - Higher z-index and better positioning */}
         <button
           onClick={handleClose}
-          className="absolute top-3 right-3 bg-white/20 hover:bg-white/30 rounded-full p-1.5 transition-colors z-10"
+          className="absolute -top-2 -right-2 bg-white text-gray-700 hover:bg-gray-100 rounded-full p-2 transition-colors z-20 shadow-lg border-2 border-white"
         >
-          <X className="w-5 h-5 text-white" />
+          <X className="w-5 h-5" />
         </button>
 
         {/* Alert Content */}
-        <div className="space-y-3 pr-8">
+        <div className="space-y-3 pr-4">
           {/* Header Message */}
           <div className="text-center">
             <p className="text-lg font-medium">💰 You dey fire this week! Keep the momentum!</p>
