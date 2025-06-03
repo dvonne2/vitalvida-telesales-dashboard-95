@@ -6,11 +6,11 @@ export const TodayMissionCard = () => {
   const progress = 75; // 9 out of 12 orders
 
   return (
-    <div className="bg-gradient-to-r from-red-500 to-orange-500 rounded-xl p-6 text-white shadow-2xl animate-pulse">
+    <div className="bg-gradient-to-r from-orange-400 to-red-400 rounded-xl p-6 text-white shadow-lg">
       <div className="flex items-center gap-3 mb-4">
-        <Target className="w-8 h-8 text-yellow-300" />
+        <Target className="w-8 h-8 text-yellow-200" />
         <h2 className="text-xl font-bold">🎯 TODAY'S MISSION</h2>
-        <Flame className="w-6 h-6 text-yellow-300" />
+        <Flame className="w-6 h-6 text-yellow-200" />
       </div>
       
       <div className="mb-4">
@@ -23,18 +23,18 @@ export const TodayMissionCard = () => {
           <span>Progress: 9/12 Orders</span>
           <span className="font-bold">{progress}%</span>
         </div>
-        <div className="w-full bg-orange-600 rounded-full h-4 overflow-hidden">
+        <div className="w-full bg-orange-500 rounded-full h-4 overflow-hidden">
           <div 
-            className="bg-gradient-to-r from-yellow-300 to-green-400 h-full transition-all duration-1000 ease-out shadow-lg"
+            className="bg-gradient-to-r from-yellow-300 to-green-400 h-full transition-all duration-500 ease-out"
             style={{ width: `${progress}%` }}
           >
-            <div className="h-full bg-white/20 animate-pulse"></div>
+            <div className="h-full bg-white/10"></div>
           </div>
         </div>
       </div>
       
       <div className="mt-4 text-center">
-        <span className="bg-yellow-400 text-black px-4 py-2 rounded-full font-bold text-sm animate-bounce">
+        <span className="bg-yellow-400 text-black px-4 py-2 rounded-full font-bold text-sm">
           🚀 3 MORE TO GO! CHOP KNUCKLE! 🚀
         </span>
       </div>
