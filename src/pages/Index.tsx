@@ -1,10 +1,9 @@
-
 import React, { useState, useEffect } from 'react';
 import { TodayMissionCard } from '../components/TodayMissionCard';
 import { KPICardsRow } from '../components/KPICardsRow';
 import { BonusProgressBar } from '../components/BonusProgressBar';
 import { AgentAuditCard } from '../components/AgentAuditCard';
-import { OrdersTable } from '../components/OrdersTable';
+import { OrdersTableWithCTA } from '../components/OrdersTableWithCTA';
 import { OrdersInProgress } from '../components/OrdersInProgress';
 import { FollowUpZone } from '../components/FollowUpZone';
 import { SalesForecastCard } from '../components/SalesForecastCard';
@@ -106,8 +105,8 @@ const Index = () => {
         {/* Agent Audit Card */}
         <AgentAuditCard />
 
-        {/* Your Orders Table */}
-        <OrdersTable />
+        {/* Your Orders Table with CTA Panels */}
+        <OrdersTableWithCTA />
 
         {/* Follow-Up Zone */}
         <FollowUpZone />
@@ -127,6 +126,9 @@ const Index = () => {
 
       {/* Live Social Feed - Fixed at bottom */}
       <LiveSocialFeed />
+      
+      {/* Action Timestamp Tracker - Always visible at bottom */}
+      <ActionTimestampTracker />
     </div>
   );
 };

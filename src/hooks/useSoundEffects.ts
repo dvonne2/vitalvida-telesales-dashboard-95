@@ -1,4 +1,3 @@
-
 import { useCallback, useRef } from 'react';
 
 let isPlaying = false;
@@ -91,7 +90,7 @@ export const useSoundEffects = () => {
     }
   }, [stopSound]);
 
-  const playSound = useCallback((type: 'success' | 'warning' | 'click' | 'bonus' | 'celebration' | 'cash_register' | 'ticking' | 'airhorn' | 'alert_ping' | 'camera_shutter') => {
+  const playSound = useCallback((type: 'success' | 'warning' | 'click' | 'bonus' | 'celebration' | 'cash_register' | 'ticking' | 'airhorn' | 'alert_ping' | 'camera_shutter' | 'whoosh') => {
     // Don't interrupt looping sounds with regular sounds
     if (loopingSound && (type === 'click' || type === 'warning')) {
       return;
@@ -265,6 +264,18 @@ export const useSoundEffects = () => {
           gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
           oscillator.start(audioContext.currentTime);
           oscillator.stop(audioContext.currentTime + 0.3);
+          break;
+          
+        case 'whoosh': // DA assignment sound - swoosh effect
+          oscillator.frequency.setValueAtTime(200, audioContext.currentTime); // Low start
+          oscillator.frequency.exponentialRampToValueAtTime(800, audioContext.currentTime + 0.3); // Sweep up
+          oscillator.frequency.exponentialRampToValueAtTime(150, audioContext.currentTime + 0.6); // Sweep down
+          oscillator.type = 'sine';
+          gainNode.gain.setValueAtTime(0.06, audioContext.currentTime);
+          gainNode.gain.exponentialRampToValueAtTime(0.03, audioContext.currentTime + 0.3);
+          gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.6);
+          oscillator.start(audioContext.currentTime);
+          oscillator.stop(audioContext.currentTime + 0.6);
           break;
       }
       
