@@ -12,6 +12,7 @@ import { ReferralTracker } from '../components/ReferralTracker';
 import { LearningStrip } from '../components/LearningStrip';
 import { LiveSocialFeed } from '../components/LiveSocialFeed';
 import { EndOfDayCard } from '../components/EndOfDayCard';
+import { InteractiveSystem } from '../components/InteractiveSystem';
 
 const Index = () => {
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -27,6 +28,9 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-yellow-50 to-green-100">
+      {/* Interactive System - handles all sound and visual effects */}
+      <InteractiveSystem />
+      
       {/* Header */}
       <div className="sticky top-0 z-50 bg-gradient-to-r from-green-600 to-yellow-500 shadow-lg">
         <div className="px-4 py-3">

@@ -2,8 +2,12 @@
 import React from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 import { Package, Clock, DollarSign, AlertCircle } from 'lucide-react';
+import { InteractiveButton } from './InteractiveButton';
+import { useSoundEffects } from '../hooks/useSoundEffects';
 
 export const OrdersInProgress = () => {
+  const { playSound } = useSoundEffects();
+
   const ordersInProgress = [
     {
       orderId: "10057",
@@ -82,6 +86,11 @@ export const OrdersInProgress = () => {
   const pendingOrders = ordersInProgress.filter(order => order.status === "pending");
   const completedOrders = ordersInProgress.filter(order => order.status === "delivered");
 
+  const handleCallNow = (customerName: string) => {
+    playSound('success');
+    alert(`🔥 Calling ${customerName} now! Get that money! 💰`);
+  };
+
   return (
     <div className="bg-white rounded-xl shadow-lg overflow-hidden">
       <div className="bg-gradient-to-r from-red-600 to-orange-600 p-4">
@@ -157,10 +166,22 @@ export const OrdersInProgress = () => {
       
       {pendingOrders.length > 0 && (
         <div className="bg-red-50 border-t border-red-200 p-3">
-          <div className="text-center">
-            <span className="bg-red-600 text-white px-4 py-2 rounded-full font-bold text-sm animate-pulse">
+          <div className="text-center space-y-2">
+            <div className="bg-red-600 text-white px-4 py-2 rounded-full font-bold text-sm animate-pulse inline-block mb-2">
               🔥 {pendingOrders.length} ORDER(S) WAITING! CALL NOW! 🔥
-            </span>
+            </div>
+            <div className="flex justify-center gap-2">
+              {pendingOrders.map((order) => (
+                <InteractiveButton
+                  key={order.orderId}
+                  variant="danger"
+                  size="sm"
+                  onClick={() => handleCallNow(order.customer)}
+                >
+                  📞 Call {order.customer}
+                </InteractiveButton>
+              ))}
+            </div>
           </div>
         </div>
       )}
