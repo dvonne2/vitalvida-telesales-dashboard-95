@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { TodayMissionCard } from '../components/TodayMissionCard';
 import { KPICardsRow } from '../components/KPICardsRow';
@@ -13,6 +12,8 @@ import { LearningStrip } from '../components/LearningStrip';
 import { LiveSocialFeed } from '../components/LiveSocialFeed';
 import { EndOfDayCard } from '../components/EndOfDayCard';
 import { InteractiveSystem } from '../components/InteractiveSystem';
+import { SmartAlertManager } from '../components/SmartAlertManager';
+import { ActionTimestampTracker } from '../components/ActionTimestampTracker';
 
 const Index = () => {
   const [currentTime, setCurrentTime] = useState(new Date());
