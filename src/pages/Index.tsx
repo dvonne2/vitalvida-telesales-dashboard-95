@@ -5,6 +5,7 @@ import { KPICardsRow } from '../components/KPICardsRow';
 import { BonusProgressBar } from '../components/BonusProgressBar';
 import { AgentAuditCard } from '../components/AgentAuditCard';
 import { OrdersTable } from '../components/OrdersTable';
+import { OrdersInProgress } from '../components/OrdersInProgress';
 import { FollowUpZone } from '../components/FollowUpZone';
 import { SalesForecastCard } from '../components/SalesForecastCard';
 import { ReferralTracker } from '../components/ReferralTracker';
@@ -83,23 +84,26 @@ const Index = () => {
         {/* 7. Your Orders Table */}
         <OrdersTable />
 
-        {/* 8. Follow-Up Zone */}
+        {/* 8. Orders in Progress */}
+        <OrdersInProgress />
+
+        {/* 9. Follow-Up Zone */}
         <FollowUpZone />
 
-        {/* 9. Sales Forecast Card */}
+        {/* 10. Sales Forecast Card */}
         <SalesForecastCard />
 
-        {/* 10. Referral & Recruit Tracker */}
+        {/* 11. Referral & Recruit Tracker */}
         <ReferralTracker />
 
-        {/* 11. Street Smart Learning Strip */}
+        {/* 12. Street Smart Learning Strip */}
         <LearningStrip />
 
-        {/* 13. End of Day Wrap Card */}
+        {/* 14. End of Day Wrap Card */}
         {isEndOfDay && <EndOfDayCard />}
       </div>
 
-      {/* 12. Live Social Feed - Fixed at bottom */}
+      {/* 13. Live Social Feed - Fixed at bottom */}
       <LiveSocialFeed />
     </div>
   );
