@@ -17,9 +17,16 @@ export const TodayMissionCard = () => {
       <div className="mb-4">
         <h3 className="text-2xl font-bold mb-2">Close 3 More Orders to Earn ₦2,000! 🔥</h3>
         <p className="text-orange-100">You don dey near the target, champion! 💪</p>
-        <div className="flex items-center gap-2 mt-2 text-orange-100">
-          <Truck className="w-4 h-4" />
-          <span className="text-sm">Target Delivery Rate: {deliveryRate}%</span>
+        
+        {/* Enhanced delivery rate visibility */}
+        <div className="bg-orange-500/30 rounded-lg p-3 mt-3 border border-orange-300">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Truck className="w-5 h-5 text-yellow-200" />
+              <span className="text-white font-semibold">Delivery Rate Target:</span>
+            </div>
+            <span className="text-yellow-200 font-bold text-lg">{deliveryRate}%</span>
+          </div>
         </div>
       </div>
 

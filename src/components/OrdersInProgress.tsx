@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
-import { Package } from 'lucide-react';
+import { Package, Clock, DollarSign, AlertCircle } from 'lucide-react';
 
 export const OrdersInProgress = () => {
   const ordersInProgress = [
@@ -13,7 +13,9 @@ export const OrdersInProgress = () => {
       callTime: "09:50",
       daAssigned: "10:11",
       paymentTime: "10:21",
-      delivered: "12:18"
+      delivered: "12:18",
+      status: "delivered",
+      urgency: "low"
     },
     {
       orderId: "10056",
@@ -23,7 +25,9 @@ export const OrdersInProgress = () => {
       callTime: "08:28",
       daAssigned: "08:48",
       paymentTime: "09:07",
-      delivered: "11:14"
+      delivered: "11:14",
+      status: "delivered",
+      urgency: "low"
     },
     {
       orderId: "10055",
@@ -33,7 +37,9 @@ export const OrdersInProgress = () => {
       callTime: "07:38",
       daAssigned: "07:59",
       paymentTime: "08:16",
-      delivered: "10:48"
+      delivered: "10:48",
+      status: "delivered",
+      urgency: "low"
     },
     {
       orderId: "10054",
@@ -43,7 +49,9 @@ export const OrdersInProgress = () => {
       callTime: "07:20",
       daAssigned: "07:41",
       paymentTime: "08:01",
-      delivered: "10:30"
+      delivered: "10:30",
+      status: "delivered",
+      urgency: "low"
     },
     {
       orderId: "10053",
@@ -53,7 +61,9 @@ export const OrdersInProgress = () => {
       callTime: "06:53",
       daAssigned: "07:16",
       paymentTime: "07:30",
-      delivered: "09:54"
+      delivered: "09:54",
+      status: "delivered",
+      urgency: "low"
     },
     {
       orderId: "10052",
@@ -63,17 +73,37 @@ export const OrdersInProgress = () => {
       callTime: "—",
       daAssigned: "—",
       paymentTime: "—",
-      delivered: "—"
+      delivered: "—",
+      status: "pending",
+      urgency: "high"
     }
   ];
 
+  const pendingOrders = ordersInProgress.filter(order => order.status === "pending");
+  const completedOrders = ordersInProgress.filter(order => order.status === "delivered");
+
   return (
     <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-      <div className="bg-gradient-to-r from-gray-700 to-gray-600 p-4">
-        <h3 className="text-lg font-bold text-white flex items-center gap-2">
-          <Package className="w-5 h-5" />
-          ORDERS IN PROGRESS
-        </h3>
+      <div className="bg-gradient-to-r from-red-600 to-orange-600 p-4">
+        <div className="flex items-center justify-between">
+          <h3 className="text-lg font-bold text-white flex items-center gap-2">
+            <Package className="w-5 h-5" />
+            ORDERS IN PROGRESS - MOVE FAST! 🚨
+          </h3>
+          <div className="flex items-center gap-4 text-white">
+            <div className="flex items-center gap-1">
+              <AlertCircle className="w-4 h-4 text-yellow-300" />
+              <span className="text-sm font-medium">{pendingOrders.length} PENDING</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <DollarSign className="w-4 h-4 text-green-300" />
+              <span className="text-sm font-medium">{completedOrders.length} CLOSED</span>
+            </div>
+          </div>
+        </div>
+        <p className="text-orange-100 text-sm mt-1">
+          💰 Each pending order = Lost money! Call now! ⏰
+        </p>
       </div>
 
       <div className="overflow-x-auto">
@@ -92,20 +122,48 @@ export const OrdersInProgress = () => {
           </TableHeader>
           <TableBody>
             {ordersInProgress.map((order) => (
-              <TableRow key={order.orderId} className="hover:bg-gray-50">
-                <TableCell className="font-medium text-gray-900">{order.orderId}</TableCell>
-                <TableCell className="text-gray-700">{order.customer}</TableCell>
+              <TableRow 
+                key={order.orderId} 
+                className={`hover:bg-gray-50 ${order.status === "pending" ? "bg-red-50 border-l-4 border-red-500" : ""}`}
+              >
+                <TableCell className="font-medium text-gray-900">
+                  <div className="flex items-center gap-2">
+                    {order.status === "pending" && <Clock className="w-4 h-4 text-red-500" />}
+                    {order.orderId}
+                  </div>
+                </TableCell>
+                <TableCell className={order.status === "pending" ? "font-semibold text-red-700" : "text-gray-700"}>
+                  {order.customer}
+                </TableCell>
                 <TableCell className="text-gray-700">{order.product}</TableCell>
                 <TableCell className="text-gray-700">{order.assignedTime}</TableCell>
-                <TableCell className="text-gray-700">{order.callTime}</TableCell>
-                <TableCell className="text-gray-700">{order.daAssigned}</TableCell>
-                <TableCell className="text-gray-700">{order.paymentTime}</TableCell>
-                <TableCell className="text-gray-700">{order.delivered}</TableCell>
+                <TableCell className={order.callTime === "—" ? "text-red-600 font-bold" : "text-gray-700"}>
+                  {order.callTime}
+                </TableCell>
+                <TableCell className={order.daAssigned === "—" ? "text-red-600 font-bold" : "text-gray-700"}>
+                  {order.daAssigned}
+                </TableCell>
+                <TableCell className={order.paymentTime === "—" ? "text-red-600 font-bold" : "text-gray-700"}>
+                  {order.paymentTime}
+                </TableCell>
+                <TableCell className={order.delivered === "—" ? "text-red-600 font-bold" : "text-gray-700"}>
+                  {order.delivered}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </div>
+      
+      {pendingOrders.length > 0 && (
+        <div className="bg-red-50 border-t border-red-200 p-3">
+          <div className="text-center">
+            <span className="bg-red-600 text-white px-4 py-2 rounded-full font-bold text-sm animate-pulse">
+              🔥 {pendingOrders.length} ORDER(S) WAITING! CALL NOW! 🔥
+            </span>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

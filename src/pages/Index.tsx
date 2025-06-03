@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { TodayMissionCard } from '../components/TodayMissionCard';
 import { KPICardsRow } from '../components/KPICardsRow';
@@ -75,6 +76,9 @@ const Index = () => {
           ]}
         />
 
+        {/* Orders in Progress - Moved here for urgency */}
+        <OrdersInProgress />
+
         {/* 5. Glowing Bonus Progress Bar */}
         <BonusProgressBar />
 
@@ -83,9 +87,6 @@ const Index = () => {
 
         {/* 7. Your Orders Table */}
         <OrdersTable />
-
-        {/* 8. Orders in Progress */}
-        <OrdersInProgress />
 
         {/* 9. Follow-Up Zone */}
         <FollowUpZone />
