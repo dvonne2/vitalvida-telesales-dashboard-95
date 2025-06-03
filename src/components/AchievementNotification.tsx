@@ -28,7 +28,7 @@ export const AchievementNotification = ({ achievement, onDismiss }: AchievementN
       const timer = setTimeout(() => {
         setIsVisible(false);
         setTimeout(onDismiss, 300);
-      }, 5000);
+      }, 4000);
       
       return () => clearTimeout(timer);
     }
@@ -38,26 +38,26 @@ export const AchievementNotification = ({ achievement, onDismiss }: AchievementN
 
   const getIcon = () => {
     switch (achievement.type) {
-      case 'milestone': return <Trophy className="w-8 h-8 text-yellow-400" />;
-      case 'bonus': return <DollarSign className="w-8 h-8 text-green-400" />;
-      case 'streak': return <Zap className="w-8 h-8 text-blue-400" />;
-      case 'target': return <Target className="w-8 h-8 text-red-400" />;
+      case 'milestone': return <Trophy className="w-7 h-7 text-amber-500" />;
+      case 'bonus': return <DollarSign className="w-7 h-7 text-emerald-600" />;
+      case 'streak': return <Zap className="w-7 h-7 text-blue-600" />;
+      case 'target': return <Target className="w-7 h-7 text-rose-600" />;
     }
   };
 
   const getBgColor = () => {
     switch (achievement.type) {
-      case 'milestone': return 'from-yellow-500 to-orange-500';
-      case 'bonus': return 'from-green-500 to-emerald-500';
-      case 'streak': return 'from-blue-500 to-cyan-500';
-      case 'target': return 'from-red-500 to-pink-500';
+      case 'milestone': return 'from-amber-600 to-orange-700';
+      case 'bonus': return 'from-emerald-600 to-green-700';
+      case 'streak': return 'from-blue-600 to-indigo-700';
+      case 'target': return 'from-rose-600 to-pink-700';
     }
   };
 
   return (
     <div className="fixed top-4 right-4 z-50">
       <div className={`transform transition-all duration-300 ${isVisible ? 'translate-x-0 opacity-100 scale-100' : 'translate-x-full opacity-0 scale-95'}`}>
-        <div className={`bg-gradient-to-r ${getBgColor()} rounded-xl p-6 text-white shadow-2xl max-w-sm border-2 border-white/20`}>
+        <div className={`bg-gradient-to-r ${getBgColor()} rounded-xl p-6 text-white shadow-xl max-w-sm border border-white/20`}>
           <div className="flex items-start justify-between mb-3">
             <div className="flex items-center gap-3">
               {getIcon()}
@@ -77,7 +77,7 @@ export const AchievementNotification = ({ achievement, onDismiss }: AchievementN
           <p className="text-white/90 mb-4">{achievement.message}</p>
           
           <div className="bg-white/20 rounded-lg p-3 text-center">
-            <div className="text-2xl font-black text-yellow-300">
+            <div className="text-xl font-bold text-amber-200">
               +{achievement.points} POINTS! 🔥
             </div>
           </div>

@@ -13,7 +13,7 @@ export const CelebrationEffects = ({ isActive, type, onComplete }: CelebrationEf
 
   useEffect(() => {
     if (isActive) {
-      const newParticles = Array.from({ length: 15 }, (_, i) => ({
+      const newParticles = Array.from({ length: 10 }, (_, i) => ({
         id: i,
         x: Math.random() * window.innerWidth,
         y: Math.random() * window.innerHeight,
@@ -26,7 +26,7 @@ export const CelebrationEffects = ({ isActive, type, onComplete }: CelebrationEf
       const timer = setTimeout(() => {
         setParticles([]);
         onComplete?.();
-      }, 3000);
+      }, 2500);
       
       return () => clearTimeout(timer);
     }
@@ -34,11 +34,11 @@ export const CelebrationEffects = ({ isActive, type, onComplete }: CelebrationEf
 
   const getIconForType = (celebrationType: string) => {
     switch (celebrationType) {
-      case 'order': return <Star className="w-6 h-6 text-yellow-400" />;
-      case 'bonus': return <DollarSign className="w-6 h-6 text-green-400" />;
-      case 'target': return <Zap className="w-6 h-6 text-blue-400" />;
-      case 'daily': return <Heart className="w-6 h-6 text-red-400" />;
-      default: return <Star className="w-6 h-6 text-yellow-400" />;
+      case 'order': return <Star className="w-5 h-5 text-amber-500" />;
+      case 'bonus': return <DollarSign className="w-5 h-5 text-emerald-600" />;
+      case 'target': return <Zap className="w-5 h-5 text-blue-600" />;
+      case 'daily': return <Heart className="w-5 h-5 text-rose-500" />;
+      default: return <Star className="w-5 h-5 text-amber-500" />;
     }
   };
 
@@ -63,8 +63,8 @@ export const CelebrationEffects = ({ isActive, type, onComplete }: CelebrationEf
         </div>
       ))}
       
-      {/* Confetti overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-yellow-400/20 via-transparent to-green-400/20 animate-pulse" />
+      {/* Subtle confetti overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-amber-100/30 via-transparent to-emerald-100/30 animate-pulse" />
     </div>
   );
 };

@@ -1,50 +1,77 @@
 
-import { useCallback } from 'react';
+import { useCallback, useRef } from 'react';
+
+let isPlaying = false;
+let currentOscillator: OscillatorNode | null = null;
 
 export const useSoundEffects = () => {
+  const lastSoundTime = useRef(0);
+
   const playSound = useCallback((type: 'success' | 'warning' | 'click' | 'bonus' | 'celebration') => {
-    // In a real app, you'd play actual audio files
-    // For now, we'll use the Web Audio API to create simple beeps
+    // Prevent overlapping sounds - minimum 500ms between sounds
+    const now = Date.now();
+    if (now - lastSoundTime.current < 500) {
+      return;
+    }
+
+    // Stop any currently playing sound
+    if (currentOscillator) {
+      try {
+        currentOscillator.stop();
+        currentOscillator = null;
+      } catch (e) {
+        // Ignore errors when stopping already stopped oscillator
+      }
+    }
+
+    if (isPlaying) return;
+
     try {
+      isPlaying = true;
+      lastSoundTime.current = now;
+
       const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
       const oscillator = audioContext.createOscillator();
       const gainNode = audioContext.createGain();
       
+      currentOscillator = oscillator;
+      
       oscillator.connect(gainNode);
       gainNode.connect(audioContext.destination);
       
-      // Different frequencies for different sound types
+      // Softer, more pleasant tones
       switch (type) {
         case 'success':
-          oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
-          oscillator.frequency.setValueAtTime(1000, audioContext.currentTime + 0.1);
+          oscillator.frequency.setValueAtTime(523, audioContext.currentTime); // C note
           break;
         case 'warning':
-          oscillator.frequency.setValueAtTime(400, audioContext.currentTime);
-          oscillator.frequency.setValueAtTime(300, audioContext.currentTime + 0.1);
+          oscillator.frequency.setValueAtTime(349, audioContext.currentTime); // F note
           break;
         case 'click':
-          oscillator.frequency.setValueAtTime(600, audioContext.currentTime);
+          oscillator.frequency.setValueAtTime(440, audioContext.currentTime); // A note
           break;
         case 'bonus':
-          oscillator.frequency.setValueAtTime(523, audioContext.currentTime); // C note
-          oscillator.frequency.setValueAtTime(659, audioContext.currentTime + 0.1); // E note
-          oscillator.frequency.setValueAtTime(784, audioContext.currentTime + 0.2); // G note
+          oscillator.frequency.setValueAtTime(659, audioContext.currentTime); // E note
           break;
         case 'celebration':
-          oscillator.frequency.setValueAtTime(1047, audioContext.currentTime); // High C
-          oscillator.frequency.setValueAtTime(1319, audioContext.currentTime + 0.1); // High E
-          oscillator.frequency.setValueAtTime(1568, audioContext.currentTime + 0.2); // High G
+          oscillator.frequency.setValueAtTime(784, audioContext.currentTime); // G note
           break;
       }
       
       oscillator.type = 'sine';
-      gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+      gainNode.gain.setValueAtTime(0.05, audioContext.currentTime); // Much quieter
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
       
       oscillator.start(audioContext.currentTime);
-      oscillator.stop(audioContext.currentTime + 0.3);
+      oscillator.stop(audioContext.currentTime + 0.2); // Shorter duration
+      
+      oscillator.onended = () => {
+        isPlaying = false;
+        currentOscillator = null;
+      };
     } catch (error) {
+      isPlaying = false;
+      currentOscillator = null;
       console.log('Audio not supported or blocked');
     }
   }, []);

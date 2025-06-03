@@ -36,13 +36,13 @@ export const InteractiveButton = ({
   const getVariantClasses = () => {
     switch (variant) {
       case 'primary':
-        return 'bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white';
+        return 'bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white';
       case 'success':
-        return 'bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white';
+        return 'bg-gradient-to-r from-emerald-600 to-green-700 hover:from-emerald-700 hover:to-green-800 text-white';
       case 'warning':
-        return 'bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 text-white';
+        return 'bg-gradient-to-r from-amber-600 to-orange-700 hover:from-amber-700 hover:to-orange-800 text-white';
       case 'danger':
-        return 'bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white';
+        return 'bg-gradient-to-r from-red-600 to-rose-700 hover:from-red-700 hover:to-rose-800 text-white';
     }
   };
 
@@ -61,16 +61,16 @@ export const InteractiveButton = ({
       className={`
         ${getVariantClasses()}
         ${getSizeClasses()}
-        font-bold rounded-lg shadow-lg
+        font-semibold rounded-lg shadow-md
         transform transition-all duration-150
-        ${isClicked ? 'scale-95 shadow-md' : 'scale-100 hover:scale-105 hover:shadow-xl'}
+        ${isClicked ? 'scale-95 shadow-sm' : 'scale-100 hover:scale-105 hover:shadow-lg'}
         ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
         relative overflow-hidden
         ${className}
       `}
     >
       {isClicked && (
-        <div className="absolute inset-0 bg-white/30 animate-pulse rounded-lg" />
+        <div className="absolute inset-0 bg-white/20 animate-pulse rounded-lg" />
       )}
       <span className="relative z-10">{children}</span>
     </button>

@@ -74,29 +74,34 @@ export const InteractiveSystem = () => {
     }
   ];
 
-  // Simulate random events
+  // Simulate random events - reduced frequency and no overlaps
   useEffect(() => {
     const eventInterval = setInterval(() => {
+      // Don't trigger new events if something is already showing
+      if (currentAchievement || currentMessage || celebration.isActive) {
+        return;
+      }
+
       const random = Math.random();
       
-      if (random < 0.3) {
+      if (random < 0.2) {
         // Show motivational message
         const randomMessage = motivationalMessages[Math.floor(Math.random() * motivationalMessages.length)];
         setCurrentMessage(randomMessage);
-      } else if (random < 0.5) {
+      } else if (random < 0.3) {
         // Show achievement
         const randomAchievement = achievements[Math.floor(Math.random() * achievements.length)];
         setCurrentAchievement(randomAchievement);
-      } else if (random < 0.6) {
+      } else if (random < 0.35) {
         // Trigger celebration
         const celebrationTypes: Array<'order' | 'bonus' | 'target' | 'daily'> = ['order', 'bonus', 'target', 'daily'];
         const randomType = celebrationTypes[Math.floor(Math.random() * celebrationTypes.length)];
         setCelebration({ isActive: true, type: randomType });
       }
-    }, 15000); // Every 15 seconds
+    }, 20000); // Every 20 seconds instead of 15
 
     return () => clearInterval(eventInterval);
-  }, []);
+  }, [currentAchievement, currentMessage, celebration.isActive]);
 
   return (
     <>

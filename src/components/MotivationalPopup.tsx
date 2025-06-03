@@ -28,7 +28,7 @@ export const MotivationalPopup = ({ message, onDismiss }: MotivationalPopupProps
       const timer = setTimeout(() => {
         setIsVisible(false);
         setTimeout(onDismiss, 300);
-      }, 4000);
+      }, 3500);
       
       return () => clearTimeout(timer);
     }
@@ -39,33 +39,33 @@ export const MotivationalPopup = ({ message, onDismiss }: MotivationalPopupProps
   const getIcon = () => {
     switch (message.type) {
       case 'urgent': return <Clock className="w-6 h-6 text-red-400" />;
-      case 'motivational': return <Zap className="w-6 h-6 text-yellow-400" />;
+      case 'motivational': return <Zap className="w-6 h-6 text-amber-400" />;
       case 'tip': return <TrendingUp className="w-6 h-6 text-blue-400" />;
-      case 'celebration': return <Zap className="w-6 h-6 text-green-400" />;
+      case 'celebration': return <Zap className="w-6 h-6 text-emerald-400" />;
     }
   };
 
   const getBgColor = () => {
     switch (message.type) {
-      case 'urgent': return 'from-red-600 to-orange-600';
-      case 'motivational': return 'from-purple-600 to-pink-600';
-      case 'tip': return 'from-blue-600 to-cyan-600';
-      case 'celebration': return 'from-green-600 to-emerald-600';
+      case 'urgent': return 'from-red-700 to-rose-800';
+      case 'motivational': return 'from-purple-700 to-indigo-800';
+      case 'tip': return 'from-blue-700 to-cyan-800';
+      case 'celebration': return 'from-emerald-700 to-green-800';
     }
   };
 
   return (
     <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
       <div className={`transform transition-all duration-300 ${isVisible ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}>
-        <div className={`bg-gradient-to-r ${getBgColor()} rounded-2xl p-8 text-white shadow-2xl max-w-md border-2 border-white/20 relative overflow-hidden`}>
-          {/* Animated background effect */}
-          <div className="absolute inset-0 bg-white/10 animate-pulse rounded-2xl" />
+        <div className={`bg-gradient-to-r ${getBgColor()} rounded-2xl p-8 text-white shadow-xl max-w-md border border-white/20 relative overflow-hidden`}>
+          {/* Subtle background effect */}
+          <div className="absolute inset-0 bg-white/5 animate-pulse rounded-2xl" />
           
           <div className="relative z-10">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
                 {getIcon()}
-                <span className="text-3xl">{message.emoji}</span>
+                <span className="text-2xl">{message.emoji}</span>
               </div>
               <button 
                 onClick={() => setIsVisible(false)}
@@ -79,8 +79,8 @@ export const MotivationalPopup = ({ message, onDismiss }: MotivationalPopupProps
             <p className="text-white/90 text-lg leading-relaxed">{message.message}</p>
             
             {message.type === 'urgent' && (
-              <div className="mt-4 bg-red-500/30 rounded-lg p-3 border border-red-400/50">
-                <p className="text-center font-bold animate-pulse">⚡ ACTION NEEDED NOW! ⚡</p>
+              <div className="mt-4 bg-red-600/30 rounded-lg p-3 border border-red-500/50">
+                <p className="text-center font-bold">⚡ ACTION NEEDED NOW! ⚡</p>
               </div>
             )}
           </div>
