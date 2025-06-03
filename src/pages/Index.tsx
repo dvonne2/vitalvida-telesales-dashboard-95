@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { TodayMissionCard } from '../components/TodayMissionCard';
 import { KPICardsRow } from '../components/KPICardsRow';
@@ -14,9 +15,12 @@ import { EndOfDayCard } from '../components/EndOfDayCard';
 import { InteractiveSystem } from '../components/InteractiveSystem';
 import { SmartAlertManager } from '../components/SmartAlertManager';
 import { ActionTimestampTracker } from '../components/ActionTimestampTracker';
+import { WeeklyBonusAlert } from '../components/WeeklyBonusAlert';
+import { useWeeklyBonusAlert } from '../hooks/useWeeklyBonusAlert';
 
 const Index = () => {
   const [currentTime, setCurrentTime] = useState(new Date());
+  const { showAlert, alertData, closeAlert } = useWeeklyBonusAlert();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -31,6 +35,16 @@ const Index = () => {
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-yellow-50 to-green-100">
       {/* Interactive System - handles all sound and visual effects */}
       <InteractiveSystem />
+      
+      {/* Weekly Bonus Alert - appears above everything */}
+      {showAlert && alertData && (
+        <WeeklyBonusAlert
+          currentBonus={alertData.currentBonus}
+          targetBonus={alertData.targetBonus}
+          ordersNeeded={alertData.ordersNeeded}
+          onClose={closeAlert}
+        />
+      )}
       
       {/* Mobile-optimized header */}
       <div className="sticky top-0 z-50 bg-gradient-to-r from-green-600 to-yellow-500 shadow-lg">
