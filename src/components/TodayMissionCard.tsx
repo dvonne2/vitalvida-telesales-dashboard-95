@@ -15,7 +15,7 @@ export const TodayMissionCard = () => {
     }`}>
       <div className="flex items-center gap-3 mb-4">
         {isUrgent ? (
-          <Bell className="w-8 h-8 text-white animate-bounce" />
+          <Bell className="w-8 h-8 text-white" />
         ) : (
           <Target className="w-8 h-8 text-white" />
         )}
@@ -81,7 +81,7 @@ export const TodayMissionCard = () => {
       <div className="mt-4 text-center">
         <span className={`px-4 py-2 rounded-full font-bold text-sm ${
           isUrgent 
-            ? 'bg-yellow-400 text-black animate-pulse' // 🟡 YELLOW for action needed
+            ? 'bg-yellow-400 text-black' // 🟡 YELLOW for action needed - BLACK text for contrast
             : 'bg-green-400 text-black'
         }`}>
           {isUrgent 

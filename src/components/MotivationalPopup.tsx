@@ -60,11 +60,11 @@ export const MotivationalPopup = ({ message, onDismiss }: MotivationalPopupProps
 
   const getIcon = () => {
     switch (message.type) {
-      case 'urgent': return <Bell className="w-6 h-6 text-white animate-bounce" />;
+      case 'urgent': return <Bell className="w-6 h-6 text-white" />;
       case 'reassignment': return <AlertTriangle className="w-6 h-6 text-white" />;
       case 'fomo': return <Zap className="w-6 h-6 text-white" />;
-      case 'motivational': return <Zap className="w-6 h-6 text-white" />;
-      case 'tip': return <TrendingUp className="w-6 h-6 text-white" />;
+      case 'motivational': return <Zap className="w-6 h-6 text-black" />;
+      case 'tip': return <TrendingUp className="w-6 h-6 text-black" />;
       case 'celebration': return <Zap className="w-6 h-6 text-white" />;
     }
   };
@@ -125,7 +125,7 @@ export const MotivationalPopup = ({ message, onDismiss }: MotivationalPopupProps
           {/* Enhanced background effect for urgent messages */}
           <div className={`absolute inset-0 rounded-2xl ${
             (message.type === 'urgent' || message.type === 'fomo' || message.type === 'reassignment') 
-              ? 'bg-white/10 animate-pulse' 
+              ? 'bg-white/10' 
               : 'bg-white/5'
           }`} />
           

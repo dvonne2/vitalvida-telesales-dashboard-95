@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 import { Package, Clock, DollarSign, AlertCircle, Bell } from 'lucide-react';
@@ -104,7 +103,7 @@ export const OrdersInProgress = () => {
           <h3 className="text-lg font-bold text-white flex items-center gap-2">
             {pendingOrders.length > 0 ? (
               <>
-                <Bell className="w-5 h-5 animate-bounce" />
+                <Bell className="w-5 h-5" />
                 🚨 WAHALA DEY - {pendingOrders.length} ORDER(S) WAITING!
               </>
             ) : (
@@ -164,7 +163,7 @@ export const OrdersInProgress = () => {
                 <TableCell className="font-medium text-gray-900">
                   <div className="flex items-center gap-2">
                     {order.status === "pending" && (
-                      <Clock className="w-4 h-4 text-red-500 animate-pulse" />
+                      <Clock className="w-4 h-4 text-red-500" />
                     )}
                     {order.orderId}
                   </div>
@@ -216,7 +215,7 @@ export const OrdersInProgress = () => {
       {pendingOrders.length > 0 && (
         <div className="bg-red-50 border-t-4 border-red-500 p-4">
           <div className="text-center space-y-3">
-            <div className="bg-red-600 text-white px-4 py-2 rounded-full font-bold text-sm animate-pulse inline-block">
+            <div className="bg-red-600 text-white px-4 py-2 rounded-full font-bold text-sm inline-block">
               🔥 {pendingOrders.length} ORDER(S) DEY WAIT! CALL NOW-NOW! 🔥
             </div>
             <p className="text-red-800 text-sm font-medium">
@@ -229,7 +228,6 @@ export const OrdersInProgress = () => {
                   variant="danger"
                   size="sm"
                   onClick={() => handleCallNow(order.customer)}
-                  className="animate-pulse"
                 >
                   📞 Call {order.customer} NOW!
                 </InteractiveButton>
