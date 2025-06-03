@@ -1,46 +1,169 @@
 
-import React from 'react';
-import { Users, Gift, TrendingUp, Star } from 'lucide-react';
+import React, { useState } from 'react';
+import { ChevronDown, ChevronUp, Users, Repeat, ArrowUp, Handshake } from 'lucide-react';
+
+interface ReferralEntry {
+  amount: number;
+  name: string;
+  product: string;
+  date: string;
+}
+
+interface ReferralCategory {
+  title: string;
+  icon: React.ReactNode;
+  totalAmount: number;
+  count: number;
+  entries: ReferralEntry[];
+}
 
 export const ReferralTracker = () => {
-  const referralBonuses = [
-    { type: "Customer Referral", count: 3, bonus: 1500, icon: "👥" },
-    { type: "Customer Upgrade", count: 2, bonus: 800, icon: "⬆️" },
-    { type: "Repeat Customer", count: 5, bonus: 2000, icon: "🔄" },
-    { type: "Rep Referral", count: 1, bonus: 5000, icon: "🤝" }
+  const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
+
+  const categories: ReferralCategory[] = [
+    {
+      title: "👥 New Customers",
+      icon: <Users className="w-5 h-5" />,
+      totalAmount: 1500,
+      count: 3,
+      entries: [
+        { amount: 500, name: "Adebayo A.", product: "Fulani Hair Gro Starter", date: "May 27" },
+        { amount: 500, name: "Nkechi B.", product: "Family Save Combo", date: "May 29" },
+        { amount: 500, name: "Fatima O.", product: "Self-Love B2GOF Bundle", date: "June 2" }
+      ]
+    },
+    {
+      title: "🔁 Old Customers Returned",
+      icon: <Repeat className="w-5 h-5" />,
+      totalAmount: 1200,
+      count: 3,
+      entries: [
+        { amount: 400, name: "Kemi O.", product: "Vitamin D Refill", date: "May 30" },
+        { amount: 400, name: "Bola T.", product: "Omega 3 Reorder", date: "June 1" },
+        { amount: 400, name: "Ahmed S.", product: "Multivitamin Pack", date: "June 3" }
+      ]
+    },
+    {
+      title: "⬆️ Upgraded Customers",
+      icon: <ArrowUp className="w-5 h-5" />,
+      totalAmount: 800,
+      count: 2,
+      entries: [
+        { amount: 400, name: "Chioma M.", product: "Premium Health Pack", date: "May 28" },
+        { amount: 400, name: "Ibrahim L.", product: "Executive Wellness Bundle", date: "June 1" }
+      ]
+    },
+    {
+      title: "🤝 Recruited Reps",
+      icon: <Handshake className="w-5 h-5" />,
+      totalAmount: 5000,
+      count: 1,
+      entries: [
+        { amount: 5000, name: "Blessing C.", product: "New Rep Onboarding", date: "May 25" }
+      ]
+    }
   ];
 
-  const totalBonus = referralBonuses.reduce((sum, item) => sum + item.bonus, 0);
+  const totalEarned = categories.reduce((sum, category) => sum + category.totalAmount, 0);
+
+  const toggleCategory = (categoryTitle: string) => {
+    setExpandedCategory(expandedCategory === categoryTitle ? null : categoryTitle);
+  };
 
   return (
-    <div className="bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl p-6 text-white shadow-lg">
-      <div className="flex items-center gap-3 mb-4">
-        <Gift className="w-6 h-6 text-yellow-300" />
-        <h3 className="text-lg font-bold">🎁 REFERRAL & RECRUIT TRACKER</h3>
+    <div className="bg-gradient-to-br from-purple-600 via-purple-700 to-violet-800 rounded-xl p-6 text-white shadow-2xl border-2 border-purple-400">
+      {/* Title Bar */}
+      <div className="text-center mb-6">
+        <h3 className="text-xl font-bold flex items-center justify-center gap-2 mb-2">
+          🪙 REFERRAL & RECRUIT TRACKER
+        </h3>
+        <p className="text-purple-200 text-sm font-medium">
+          🔊 Every person you brought. Every kobo you earned.
+        </p>
       </div>
 
-      <div className="bg-white/10 rounded-lg p-4 mb-4 text-center">
-        <div className="text-3xl font-bold text-yellow-300">₦{totalBonus.toLocaleString()}</div>
-        <div className="text-sm opacity-80">Total Referral Bonus This Month</div>
+      {/* Big Total with Glow Effect */}
+      <div className="bg-gradient-to-r from-yellow-400 to-orange-400 rounded-lg p-6 mb-6 text-center shadow-lg animate-pulse">
+        <div className="text-4xl font-black text-black mb-2">
+          ₦{totalEarned.toLocaleString()}
+        </div>
+        <div className="text-black font-bold text-lg">
+          💥 Referral Bonus Earned This Month
+        </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
-        {referralBonuses.map((item, index) => (
-          <div key={index} className="bg-white/10 rounded-lg p-3 hover:bg-white/20 transition-all">
-            <div className="flex items-center gap-2 mb-2">
-              <span className="text-lg">{item.icon}</span>
-              <span className="text-sm font-medium">{item.type}</span>
+      {/* Category Breakdown Cards */}
+      <div className="space-y-4 mb-6">
+        {categories.map((category) => (
+          <div key={category.title} className="bg-white/10 rounded-lg overflow-hidden border border-purple-300">
+            <div 
+              className="p-4 cursor-pointer hover:bg-white/20 transition-all duration-200"
+              onClick={() => toggleCategory(category.title)}
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  {category.icon}
+                  <div>
+                    <div className="font-bold text-lg">{category.title}</div>
+                    <div className="text-yellow-300 font-bold">
+                      ₦{category.totalAmount.toLocaleString()} from {category.count} people
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button className="bg-purple-500 hover:bg-purple-400 px-3 py-1 rounded-full text-sm font-bold transition-colors">
+                    Show Who Paid You
+                  </button>
+                  {expandedCategory === category.title ? 
+                    <ChevronUp className="w-5 h-5" /> : 
+                    <ChevronDown className="w-5 h-5" />
+                  }
+                </div>
+              </div>
             </div>
-            <div className="flex justify-between items-center">
-              <span className="text-lg font-bold">{item.count}</span>
-              <span className="text-sm font-bold text-yellow-300">+₦{item.bonus}</span>
-            </div>
+
+            {/* Expanded Table */}
+            {expandedCategory === category.title && (
+              <div className="bg-black/20 p-4 border-t border-purple-300">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b border-purple-300">
+                        <th className="text-left py-2 px-3 font-bold text-yellow-300">💸 Amount</th>
+                        <th className="text-left py-2 px-3 font-bold text-yellow-300">👤 Name</th>
+                        <th className="text-left py-2 px-3 font-bold text-yellow-300">🛍️ What They Bought</th>
+                        <th className="text-left py-2 px-3 font-bold text-yellow-300">📅 Date</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {category.entries.map((entry, index) => (
+                        <tr 
+                          key={index} 
+                          className="border-b border-purple-400/30 hover:bg-purple-500/20 transition-colors"
+                        >
+                          <td className="py-3 px-3 font-bold text-green-300 text-lg">
+                            ₦{entry.amount.toLocaleString()}
+                          </td>
+                          <td className="py-3 px-3 font-medium">{entry.name}</td>
+                          <td className="py-3 px-3">{entry.product}</td>
+                          <td className="py-3 px-3 text-purple-200">{entry.date}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
           </div>
         ))}
       </div>
 
-      <div className="mt-4 text-center">
-        <button className="bg-gradient-to-r from-yellow-400 to-orange-400 text-black px-6 py-2 rounded-full font-bold hover:from-yellow-300 hover:to-orange-300 transition-all">
+      {/* CTA Button */}
+      <div className="text-center">
+        <button 
+          className="bg-gradient-to-r from-yellow-400 to-orange-400 text-black px-8 py-4 rounded-full font-black text-lg hover:from-yellow-300 hover:to-orange-300 transition-all duration-300 hover:scale-105 shadow-lg"
+          onClick={() => alert("Send someone to buy or join — when they do, you get paid.")}
+        >
           🚀 REFER MORE & EARN!
         </button>
       </div>
