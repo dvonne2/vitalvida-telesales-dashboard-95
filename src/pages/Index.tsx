@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { TodayMissionCard } from '../components/TodayMissionCard';
 import { KPICardsRow } from '../components/KPICardsRow';
@@ -32,11 +31,12 @@ const Index = () => {
         <div className="px-4 py-3">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-white font-bold text-lg">🚀 VITALVIDA DANGOTE MODE</h1>
+              <h1 className="text-white font-bold text-lg">🚀 VITALVIDA TELESALES MODE</h1>
               <p className="text-green-100 text-sm">Make that money, champ! 💰</p>
             </div>
             <div className="text-right">
               <div className="text-white font-bold">AGENT: EMEKA</div>
+              <div className="text-green-100 text-sm font-medium">Monthly Rate: 74%</div>
               <div className="text-green-100 text-sm">{currentTime.toLocaleTimeString()}</div>
             </div>
           </div>
