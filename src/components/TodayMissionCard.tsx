@@ -1,9 +1,10 @@
 
 import React from 'react';
-import { Target, Flame } from 'lucide-react';
+import { Target, Flame, Truck } from 'lucide-react';
 
 export const TodayMissionCard = () => {
   const progress = 75; // 9 out of 12 orders
+  const deliveryRate = 80; // Current delivery rate
 
   return (
     <div className="bg-gradient-to-r from-orange-400 to-red-400 rounded-xl p-6 text-white shadow-lg">
@@ -16,6 +17,10 @@ export const TodayMissionCard = () => {
       <div className="mb-4">
         <h3 className="text-2xl font-bold mb-2">Close 3 More Orders to Earn ₦2,000! 🔥</h3>
         <p className="text-orange-100">You don dey near the target, champion! 💪</p>
+        <div className="flex items-center gap-2 mt-2 text-orange-100">
+          <Truck className="w-4 h-4" />
+          <span className="text-sm">Target Delivery Rate: {deliveryRate}%</span>
+        </div>
       </div>
 
       <div className="space-y-2">
