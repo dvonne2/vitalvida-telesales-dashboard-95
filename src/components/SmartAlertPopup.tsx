@@ -174,7 +174,7 @@ export const SmartAlertPopup = ({ alert, onActionConfirmed, onDismiss }: SmartAl
             <div className="space-y-3">
               <InteractiveButton
                 onClick={handleActionClick}
-                variant={alert.urgency === 'critical' ? 'destructive' : 'success'}
+                variant={alert.urgency === 'critical' ? 'danger' : 'success'}
                 size="lg"
                 className="w-full text-lg font-bold py-4"
               >
