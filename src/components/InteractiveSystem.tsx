@@ -3,20 +3,22 @@ import React, { useState, useEffect, useRef } from 'react';
 import { CelebrationEffects } from './CelebrationEffects';
 import { AchievementNotification } from './AchievementNotification';
 import { MotivationalPopup } from './MotivationalPopup';
+import { CallPromptPopup } from './CallPromptPopup';
+import { CallUploadPrompt } from './CallUploadPrompt';
 
 interface Achievement {
   id: string;
   title: string;
   message: string;
   type: 'milestone' | 'bonus' | 'streak' | 'target';
-  points: number;
+  naira: number; // Changed from points to naira
 }
 
 interface MotivationalMessage {
   id: string;
   title: string;
   message: string;
-  type: 'urgent' | 'motivational' | 'tip' | 'celebration';
+  type: 'urgent' | 'motivational' | 'tip' | 'celebration' | 'fomo' | 'reassignment';
   emoji: string;
 }
 
@@ -24,124 +26,185 @@ export const InteractiveSystem = () => {
   const [celebration, setCelebration] = useState<{ isActive: boolean; type: 'order' | 'bonus' | 'target' | 'daily' }>({ isActive: false, type: 'order' });
   const [currentAchievement, setCurrentAchievement] = useState<Achievement | null>(null);
   const [currentMessage, setCurrentMessage] = useState<MotivationalMessage | null>(null);
+  const [showCallPrompt, setShowCallPrompt] = useState<{ show: boolean; customer: string; orderId: string; product: string } | null>(null);
+  const [showUploadPrompt, setShowUploadPrompt] = useState<{ show: boolean; customer: string; orderId: string } | null>(null);
   
   // Track shown messages to prevent repeats
   const shownMessages = useRef<Set<string>>(new Set());
   const shownAchievements = useRef<Set<string>>(new Set());
 
-  // Sample achievements and messages that could be triggered
+  // Updated achievements with Naira instead of points
   const achievements: Achievement[] = [
     {
       id: 'first_order',
       title: 'First Blood! 🩸',
       message: 'You just closed your first order today! The hustle begins!',
       type: 'milestone',
-      points: 100
+      naira: 500
     },
     {
-      id: 'bonus_tier',
+      id: 'bonus_tier_1000',
       title: 'Bonus Beast Mode! 💰',
-      message: 'You hit the next bonus tier! Money dey enter your account!',
+      message: 'You hit ₦1,000 bonus tier! Money dey enter your account!',
       type: 'bonus',
-      points: 500
+      naira: 1000
     },
     {
-      id: 'fast_response',
-      title: 'Lightning Fast! ⚡',
-      message: 'Under 5 minutes response time! You dey fire!',
+      id: 'bonus_tier_5000',
+      title: '🎉 You dey try! You just passed ₦5K today!',
+      message: 'Big Milestone Hit! ₦5,000 daily bonus unlocked!',
+      type: 'bonus',
+      naira: 5000
+    },
+    {
+      id: 'fast_upload',
+      title: '✅ You earned ₦X!',
+      message: 'Call uploaded on time! Speed = Money!',
       type: 'streak',
-      points: 250
+      naira: 300
     },
     {
-      id: 'daily_target',
-      title: 'Target Crusher! 🎯',
-      message: 'You smashed your daily target! Champion energy!',
+      id: 'weekly_bonus',
+      title: '🏆 Weekly bonus just got fatter!',
+      message: 'You dey fire this week! Keep the momentum!',
       type: 'target',
-      points: 750
-    },
-    {
-      id: 'week_streak',
-      title: 'Week Warrior! 🔥',
-      message: 'Five days straight of hitting targets! Unstoppable!',
-      type: 'streak',
-      points: 1000
+      naira: 2500
     }
   ];
 
   const motivationalMessages: MotivationalMessage[] = [
     {
-      id: 'pending_order',
-      title: 'Order Alert! 🚨',
+      id: 'call_kemi_urgent',
+      title: '📞 Call Kemi Now!',
       message: 'Kemi O. is waiting for your call! That\'s ₦2,000 bonus hanging there!',
       type: 'urgent',
       emoji: '📞'
     },
     {
-      id: 'daily_motivation',
-      title: 'Champion Energy! 💪',
-      message: 'You\'re 3 orders away from beating yesterday\'s record. Keep pushing!',
+      id: 'upload_slow_warning',
+      title: '⏰ That one slow o. Try faster next one.',
+      message: 'Speed up your call uploads to earn full bonus!',
       type: 'motivational',
+      emoji: '⏰'
+    },
+    {
+      id: 'fomo_peer_wins',
+      title: '🔥 Joy just closed 6 orders & made ₦4,500 bonus today',
+      message: 'Your colleague is making serious money! Don\'t get left behind!',
+      type: 'fomo',
       emoji: '🔥'
     },
     {
-      id: 'tip_of_day',
-      title: 'Pro Tip! 💡',
-      message: 'Call customers within 10 minutes - 85% higher close rate!',
-      type: 'tip',
-      emoji: '🎯'
+      id: 'order_reassigned',
+      title: '⚠️ This customer is yours now. Don\'t dull!',
+      message: 'Order reassigned from another rep. Time to show your skills!',
+      type: 'reassignment',
+      emoji: '⚠️'
     },
     {
-      id: 'end_of_day_push',
-      title: 'Final Sprint! 🏃‍♂️',
-      message: 'Last 2 hours! One more order can change your day!',
-      type: 'motivational',
-      emoji: '⚡'
-    },
-    {
-      id: 'bonus_reminder',
-      title: 'Money Alert! 💸',
-      message: 'You\'re ₦1,500 away from next bonus tier! Keep grinding!',
+      id: 'delivery_rate_surge',
+      title: '👏👏👏 You\'re closing more!',
+      message: 'Your delivery rate is improving! Keep the momentum going!',
       type: 'celebration',
-      emoji: '💰'
+      emoji: '👏'
+    },
+    {
+      id: 'end_of_day_wrap',
+      title: '🌅 You closed 2 of 10 today',
+      message: 'Not bad, but tomorrow we go harder! What can you do better?',
+      type: 'motivational',
+      emoji: '🌅'
     }
   ];
 
-  // Simulate random events - reduced frequency and no overlaps
+  // Simulate new order assignment (triggers call prompt)
+  useEffect(() => {
+    const callPromptInterval = setInterval(() => {
+      if (!showCallPrompt && !showUploadPrompt && !currentMessage && !currentAchievement) {
+        const random = Math.random();
+        if (random < 0.15) { // 15% chance every 20 seconds
+          setShowCallPrompt({
+            show: true,
+            customer: 'Kemi O.',
+            orderId: '10058',
+            product: 'Vitamin D Chews'
+          });
+        }
+      }
+    }, 20000);
+
+    return () => clearInterval(callPromptInterval);
+  }, [showCallPrompt, showUploadPrompt, currentMessage, currentAchievement]);
+
+  // Reduced frequency for other events
   useEffect(() => {
     const eventInterval = setInterval(() => {
       // Don't trigger new events if something is already showing
-      if (currentAchievement || currentMessage || celebration.isActive) {
+      if (currentAchievement || currentMessage || celebration.isActive || showCallPrompt || showUploadPrompt) {
         return;
       }
 
       const random = Math.random();
       
-      if (random < 0.2) {
-        // Show motivational message - but only if not shown before
+      if (random < 0.12) {
+        // Show motivational message
         const availableMessages = motivationalMessages.filter(msg => !shownMessages.current.has(msg.id));
         if (availableMessages.length > 0) {
           const randomMessage = availableMessages[Math.floor(Math.random() * availableMessages.length)];
           shownMessages.current.add(randomMessage.id);
           setCurrentMessage(randomMessage);
         }
-      } else if (random < 0.3) {
-        // Show achievement - but only if not shown before
+      } else if (random < 0.18) {
+        // Show achievement
         const availableAchievements = achievements.filter(ach => !shownAchievements.current.has(ach.id));
         if (availableAchievements.length > 0) {
           const randomAchievement = availableAchievements[Math.floor(Math.random() * availableAchievements.length)];
           shownAchievements.current.add(randomAchievement.id);
           setCurrentAchievement(randomAchievement);
         }
-      } else if (random < 0.35) {
+      } else if (random < 0.22) {
         // Trigger celebration
         const celebrationTypes: Array<'order' | 'bonus' | 'target' | 'daily'> = ['order', 'bonus', 'target', 'daily'];
         const randomType = celebrationTypes[Math.floor(Math.random() * celebrationTypes.length)];
         setCelebration({ isActive: true, type: randomType });
       }
-    }, 25000); // Every 25 seconds to give more breathing room
+    }, 30000); // Every 30 seconds
 
     return () => clearInterval(eventInterval);
-  }, [currentAchievement, currentMessage, celebration.isActive]);
+  }, [currentAchievement, currentMessage, celebration.isActive, showCallPrompt, showUploadPrompt]);
+
+  const handleStartCall = () => {
+    // Show upload prompt after call starts
+    setTimeout(() => {
+      setShowUploadPrompt({
+        show: true,
+        customer: 'Kemi O.',
+        orderId: '10058'
+      });
+    }, 2000); // Wait 2 seconds before showing upload prompt
+  };
+
+  const handleUploadCall = (onTime: boolean) => {
+    if (onTime) {
+      // Show success achievement
+      setCurrentAchievement({
+        id: 'call_uploaded_success',
+        title: '✅ Good job! You moved fast!',
+        message: 'Call uploaded on time! Bonus earned!',
+        type: 'bonus',
+        naira: 300
+      });
+    } else {
+      // Show warning message
+      setCurrentMessage({
+        id: 'upload_late_warning',
+        title: '⏰ That one slow o. Try quicker next time.',
+        message: 'Late upload = No bonus. Speed up next time!',
+        type: 'motivational',
+        emoji: '⏰'
+      });
+    }
+  };
 
   return (
     <>
@@ -160,6 +223,25 @@ export const InteractiveSystem = () => {
         message={currentMessage}
         onDismiss={() => setCurrentMessage(null)}
       />
+
+      {showCallPrompt && (
+        <CallPromptPopup
+          customerName={showCallPrompt.customer}
+          orderId={showCallPrompt.orderId}
+          product={showCallPrompt.product}
+          onStartCall={handleStartCall}
+          onDismiss={() => setShowCallPrompt(null)}
+        />
+      )}
+
+      {showUploadPrompt && (
+        <CallUploadPrompt
+          customerName={showUploadPrompt.customer}
+          orderId={showUploadPrompt.orderId}
+          onUploadCall={handleUploadCall}
+          onDismiss={() => setShowUploadPrompt(null)}
+        />
+      )}
     </>
   );
 };

@@ -8,7 +8,7 @@ interface Achievement {
   title: string;
   message: string;
   type: 'milestone' | 'bonus' | 'streak' | 'target';
-  points: number;
+  naira: number; // Changed from points to naira
 }
 
 interface AchievementNotificationProps {
@@ -23,7 +23,17 @@ export const AchievementNotification = ({ achievement, onDismiss }: AchievementN
   useEffect(() => {
     if (achievement) {
       setIsVisible(true);
-      playSound('celebration');
+      
+      // Play appropriate sound based on achievement type
+      if (achievement.type === 'bonus') {
+        if (achievement.naira >= 5000) {
+          playSound('airhorn'); // Big milestone
+        } else {
+          playSound('cash_register'); // Regular bonus
+        }
+      } else {
+        playSound('celebration');
+      }
       
       const timer = setTimeout(() => {
         setIsVisible(false);
@@ -78,7 +88,7 @@ export const AchievementNotification = ({ achievement, onDismiss }: AchievementN
           
           <div className="bg-white/20 rounded-lg p-3 text-center">
             <div className="text-xl font-bold text-amber-200">
-              +{achievement.points} POINTS! 🔥
+              +₦{achievement.naira} EARNED! 🔥
             </div>
           </div>
         </div>
