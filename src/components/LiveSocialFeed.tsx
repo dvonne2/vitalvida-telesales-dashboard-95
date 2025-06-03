@@ -27,11 +27,11 @@ export const LiveSocialFeed = () => {
   }, [feeds.length]);
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-40 bg-gradient-to-r from-green-600 to-blue-600 text-white p-3 shadow-lg">
-      <div className={`flex items-center gap-3 transition-all duration-300 ${isVisible ? 'opacity-100 transform-none' : 'opacity-0 transform translate-y-2'}`}>
-        <Zap className="w-5 h-5 text-yellow-300 animate-pulse" />
+    <div className="fixed bottom-0 left-0 right-0 z-40 bg-gradient-to-r from-green-600 to-blue-600 text-white p-2 sm:p-3 shadow-lg">
+      <div className={`flex items-center gap-2 sm:gap-3 transition-all duration-300 ${isVisible ? 'opacity-100 transform-none' : 'opacity-0 transform translate-y-2'}`}>
+        <Zap className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-300 animate-pulse flex-shrink-0" />
         <div className="flex-1 overflow-hidden">
-          <p className="text-sm font-medium animate-pulse">
+          <p className="text-xs sm:text-sm font-medium animate-pulse truncate">
             📢 LIVE UPDATES: {feeds[currentFeed]}
           </p>
         </div>

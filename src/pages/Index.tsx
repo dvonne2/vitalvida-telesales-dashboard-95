@@ -31,28 +31,28 @@ const Index = () => {
       {/* Interactive System - handles all sound and visual effects */}
       <InteractiveSystem />
       
-      {/* Header */}
+      {/* Mobile-optimized header */}
       <div className="sticky top-0 z-50 bg-gradient-to-r from-green-600 to-yellow-500 shadow-lg">
-        <div className="px-4 py-3">
-          <div className="flex items-center justify-between">
+        <div className="px-3 sm:px-4 py-2 sm:py-3">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
             <div>
-              <h1 className="text-white font-bold text-lg">🚀 VITALVIDA TELESALES MODE</h1>
-              <p className="text-green-100 text-sm">Make that money, champ! 💰</p>
+              <h1 className="text-white font-bold text-base sm:text-lg">🚀 VITALVIDA TELESALES MODE</h1>
+              <p className="text-green-100 text-xs sm:text-sm">Make that money, champ! 💰</p>
             </div>
-            <div className="text-right">
-              <div className="text-white font-bold">AGENT: EMEKA</div>
-              <div className="text-green-100 text-sm font-medium">Monthly Rate: 74%</div>
-              <div className="text-green-100 text-sm">{currentTime.toLocaleTimeString()}</div>
+            <div className="text-left sm:text-right">
+              <div className="text-white font-bold text-sm sm:text-base">AGENT: EMEKA</div>
+              <div className="text-green-100 text-xs sm:text-sm font-medium">Monthly Rate: 74%</div>
+              <div className="text-green-100 text-xs sm:text-sm">{currentTime.toLocaleTimeString()}</div>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="p-4 space-y-6 pb-24">
-        {/* 1. Today's Mission Card - Can be RED or GREEN based on urgency */}
+      <div className="p-3 sm:p-4 space-y-4 sm:space-y-6 pb-20 sm:pb-24">
+        {/* Today's Mission Card */}
         <TodayMissionCard />
         
-        {/* ROW 1: Performance Summary - 🟢 GREEN + 🔵 BLUE (calm & proud) */}
+        {/* ROW 1: Performance Summary */}
         <KPICardsRow 
           title="📈 PERFORMANCE SUMMARY" 
           cards={[
@@ -62,7 +62,7 @@ const Index = () => {
           ]}
         />
 
-        {/* ROW 2: Bonus & Urgency - 🟡 YELLOW + 🔴 RED (reward + action) */}
+        {/* ROW 2: Bonus & Urgency */}
         <KPICardsRow 
           title="💰 BONUS & URGENT ACTIONS" 
           cards={[
@@ -72,7 +72,7 @@ const Index = () => {
           ]}
         />
 
-        {/* ROW 3: Insights & Delivery - 🔵 BLUE + 🟢 GREEN (feedback & success) */}
+        {/* ROW 3: Insights & Delivery */}
         <KPICardsRow 
           title="🚚 DELIVERY & SUCCESS" 
           cards={[
@@ -82,13 +82,13 @@ const Index = () => {
           ]}
         />
 
-        {/* Orders in Progress - HIGH PRIORITY - RED/GREEN tiered system */}
+        {/* Orders in Progress */}
         <OrdersInProgress />
 
-        {/* 🟡 YELLOW - Glowing Bonus Progress Bar */}
+        {/* Bonus Progress Bar */}
         <BonusProgressBar />
 
-        {/* ⚫️ GRAY - Agent Audit Card (neutral/informational) */}
+        {/* Agent Audit Card */}
         <AgentAuditCard />
 
         {/* Your Orders Table */}

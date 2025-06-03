@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Zap, Clock, TrendingUp, X, AlertTriangle, Phone, Bell } from 'lucide-react';
 import { useSoundEffects } from '../hooks/useSoundEffects';
@@ -60,12 +59,12 @@ export const MotivationalPopup = ({ message, onDismiss }: MotivationalPopupProps
 
   const getIcon = () => {
     switch (message.type) {
-      case 'urgent': return <Bell className="w-6 h-6 text-white" />;
-      case 'reassignment': return <AlertTriangle className="w-6 h-6 text-white" />;
-      case 'fomo': return <Zap className="w-6 h-6 text-white" />;
-      case 'motivational': return <Zap className="w-6 h-6 text-black" />;
-      case 'tip': return <TrendingUp className="w-6 h-6 text-black" />;
-      case 'celebration': return <Zap className="w-6 h-6 text-white" />;
+      case 'urgent': return <Bell className="w-5 h-5 sm:w-6 sm:h-6 text-white" />;
+      case 'reassignment': return <AlertTriangle className="w-5 h-5 sm:w-6 sm:h-6 text-white" />;
+      case 'fomo': return <Zap className="w-5 h-5 sm:w-6 sm:h-6 text-white" />;
+      case 'motivational': return <Zap className="w-5 h-5 sm:w-6 sm:h-6 text-black" />;
+      case 'tip': return <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-black" />;
+      case 'celebration': return <Zap className="w-5 h-5 sm:w-6 sm:h-6 text-white" />;
     }
   };
 
@@ -112,9 +111,9 @@ export const MotivationalPopup = ({ message, onDismiss }: MotivationalPopupProps
   };
 
   return (
-    <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
+    <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 px-4 w-full max-w-md">
       <div className={`transform transition-all duration-300 ${isVisible ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}>
-        <div className={`bg-gradient-to-r ${getBgColor()} rounded-2xl p-8 shadow-xl max-w-md border-4 ${
+        <div className={`bg-gradient-to-r ${getBgColor()} rounded-2xl p-4 sm:p-6 lg:p-8 shadow-xl border-4 ${
           message.type === 'urgent' || message.type === 'fomo' || message.type === 'reassignment'
             ? 'border-red-300' 
             : message.type === 'celebration'
@@ -130,37 +129,37 @@ export const MotivationalPopup = ({ message, onDismiss }: MotivationalPopupProps
           }`} />
           
           <div className="relative z-10">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-3">
+            <div className="flex items-center justify-between mb-3 sm:mb-4">
+              <div className="flex items-center gap-2 sm:gap-3">
                 {getIcon()}
-                <span className="text-3xl">{message.emoji}</span>
+                <span className="text-xl sm:text-2xl lg:text-3xl">{message.emoji}</span>
               </div>
               <button 
                 onClick={handleClose}
-                className={`${getTextColor()} opacity-70 hover:opacity-100 transition-colors`}
+                className={`${getTextColor()} opacity-70 hover:opacity-100 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center`}
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
             </div>
             
-            <h3 className={`text-xl font-bold mb-3 ${getTextColor()}`}>
+            <h3 className={`text-lg sm:text-xl font-bold mb-2 sm:mb-3 ${getTextColor()}`}>
               {message.title}
             </h3>
-            <p className={`text-lg leading-relaxed mb-4 ${getTextColor()} ${
+            <p className={`text-sm sm:text-base lg:text-lg leading-relaxed mb-3 sm:mb-4 ${getTextColor()} ${
               message.type === 'motivational' || message.type === 'tip' ? 'opacity-90' : 'opacity-95'
             }`}>
               {message.message}
             </p>
             
             {/* Action button with appropriate styling */}
-            <div className={`rounded-lg p-3 border-2 text-center ${
+            <div className={`rounded-lg p-2 sm:p-3 border-2 text-center ${
               message.type === 'urgent' || message.type === 'fomo' || message.type === 'reassignment'
                 ? 'bg-red-800/40 border-red-300'
                 : message.type === 'celebration'
                 ? 'bg-green-800/40 border-green-300' 
                 : 'bg-yellow-700/40 border-yellow-300'
             }`}>
-              <p className={`font-bold ${getTextColor()}`}>
+              <p className={`font-bold text-sm sm:text-base ${getTextColor()}`}>
                 {getActionText()}
               </p>
             </div>
