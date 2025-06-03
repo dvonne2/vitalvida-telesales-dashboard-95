@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Zap, Clock, TrendingUp, X, AlertTriangle, Phone } from 'lucide-react';
+import { Zap, Clock, TrendingUp, X, AlertTriangle, Phone, Bell } from 'lucide-react';
 import { useSoundEffects } from '../hooks/useSoundEffects';
 
 interface MotivationalMessage {
@@ -24,32 +24,34 @@ export const MotivationalPopup = ({ message, onDismiss }: MotivationalPopupProps
     if (message) {
       setIsVisible(true);
       
-      // Play appropriate sound based on message type
+      // Play appropriate sound based on message type with tiered system
       switch (message.type) {
         case 'urgent':
         case 'reassignment':
-          playSound('alert_ping');
+          playSound('alert_ping'); // 🔴 RED = Urgent ringtone-style
           break;
         case 'fomo':
-          playSound('airhorn');
+          playSound('airhorn'); // 🔴 RED = Major FOMO alert
           break;
         case 'celebration':
-          playSound('cash_register');
+          playSound('cash_register'); // 🟢 GREEN = Success chime
           break;
-        default:
-          playSound('success');
+        case 'motivational':
+        case 'tip':
+          playSound('success'); // 🟡 YELLOW = Notification ping
+          break;
       }
       
       const timer = setTimeout(() => {
         handleClose();
-      }, message.type === 'urgent' ? 5000 : 3500); // Urgent messages stay longer
+      }, message.type === 'urgent' ? 6000 : 4000); // Urgent messages stay longer
       
       return () => clearTimeout(timer);
     }
   }, [message]);
 
   const handleClose = () => {
-    stopSound(); // Stop any playing sound
+    stopSound(); // Stop any playing sound when dismissed
     setIsVisible(false);
     setTimeout(onDismiss, 300);
   };
@@ -58,61 +60,110 @@ export const MotivationalPopup = ({ message, onDismiss }: MotivationalPopupProps
 
   const getIcon = () => {
     switch (message.type) {
-      case 'urgent': return <Phone className="w-6 h-6 text-red-400 animate-bounce" />;
-      case 'reassignment': return <AlertTriangle className="w-6 h-6 text-orange-400" />;
-      case 'fomo': return <Zap className="w-6 h-6 text-amber-400" />;
-      case 'motivational': return <Zap className="w-6 h-6 text-purple-400" />;
-      case 'tip': return <TrendingUp className="w-6 h-6 text-blue-400" />;
-      case 'celebration': return <Zap className="w-6 h-6 text-emerald-400" />;
+      case 'urgent': return <Bell className="w-6 h-6 text-white animate-bounce" />;
+      case 'reassignment': return <AlertTriangle className="w-6 h-6 text-white" />;
+      case 'fomo': return <Zap className="w-6 h-6 text-white" />;
+      case 'motivational': return <Zap className="w-6 h-6 text-white" />;
+      case 'tip': return <TrendingUp className="w-6 h-6 text-white" />;
+      case 'celebration': return <Zap className="w-6 h-6 text-white" />;
     }
   };
 
   const getBgColor = () => {
     switch (message.type) {
-      case 'urgent': return 'from-red-700 to-rose-800';
-      case 'reassignment': return 'from-orange-700 to-red-800';
-      case 'fomo': return 'from-amber-700 to-orange-800';
-      case 'motivational': return 'from-purple-700 to-indigo-800';
-      case 'tip': return 'from-blue-700 to-cyan-800';
-      case 'celebration': return 'from-emerald-700 to-green-800';
+      case 'urgent': 
+      case 'fomo': 
+      case 'reassignment': 
+        return 'from-red-600 to-red-700'; // 🔴 RED = Urgency/Action Now
+      case 'motivational': 
+      case 'tip': 
+        return 'from-yellow-500 to-yellow-600'; // 🟡 YELLOW = Warning/Action Soon
+      case 'celebration': 
+        return 'from-green-600 to-green-700'; // 🟢 GREEN = Success/Praise
+    }
+  };
+
+  const getTextColor = () => {
+    switch (message.type) {
+      case 'urgent': 
+      case 'fomo': 
+      case 'reassignment': 
+      case 'celebration':
+        return 'text-white'; // White text on dark backgrounds
+      case 'motivational': 
+      case 'tip': 
+        return 'text-black'; // Black text on yellow background for contrast
+    }
+  };
+
+  const getActionText = () => {
+    switch (message.type) {
+      case 'urgent':
+      case 'reassignment':
+        return '⚡ DO AM NOW-NOW! ⚡';
+      case 'fomo':
+        return '🔥 NO DULL YOURSELF! 🔥';
+      case 'motivational':
+      case 'tip':
+        return '💡 NOTED! NEXT TIME I GO TRY AM!';
+      case 'celebration':
+        return '🎉 THANK YOU! I DEY TRY! 🎉';
     }
   };
 
   return (
     <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
       <div className={`transform transition-all duration-300 ${isVisible ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}>
-        <div className={`bg-gradient-to-r ${getBgColor()} rounded-2xl p-8 text-white shadow-xl max-w-md border border-white/20 relative overflow-hidden`}>
+        <div className={`bg-gradient-to-r ${getBgColor()} rounded-2xl p-8 shadow-xl max-w-md border-4 ${
+          message.type === 'urgent' || message.type === 'fomo' || message.type === 'reassignment'
+            ? 'border-red-300' 
+            : message.type === 'celebration'
+            ? 'border-green-300'
+            : 'border-yellow-300'
+        } relative overflow-hidden`}>
+          
           {/* Enhanced background effect for urgent messages */}
-          <div className={`absolute inset-0 rounded-2xl ${message.type === 'urgent' || message.type === 'fomo' ? 'bg-white/10 animate-pulse' : 'bg-white/5'}`} />
+          <div className={`absolute inset-0 rounded-2xl ${
+            (message.type === 'urgent' || message.type === 'fomo' || message.type === 'reassignment') 
+              ? 'bg-white/10 animate-pulse' 
+              : 'bg-white/5'
+          }`} />
           
           <div className="relative z-10">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
                 {getIcon()}
-                <span className="text-2xl">{message.emoji}</span>
+                <span className="text-3xl">{message.emoji}</span>
               </div>
               <button 
                 onClick={handleClose}
-                className="text-white/70 hover:text-white transition-colors"
+                className={`${getTextColor()} opacity-70 hover:opacity-100 transition-colors`}
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
             
-            <h3 className="text-xl font-bold mb-3">{message.title}</h3>
-            <p className="text-white/90 text-lg leading-relaxed">{message.message}</p>
+            <h3 className={`text-xl font-bold mb-3 ${getTextColor()}`}>
+              {message.title}
+            </h3>
+            <p className={`text-lg leading-relaxed mb-4 ${getTextColor()} ${
+              message.type === 'motivational' || message.type === 'tip' ? 'opacity-90' : 'opacity-95'
+            }`}>
+              {message.message}
+            </p>
             
-            {(message.type === 'urgent' || message.type === 'reassignment') && (
-              <div className="mt-4 bg-red-600/30 rounded-lg p-3 border border-red-500/50">
-                <p className="text-center font-bold">⚡ ACTION NEEDED NOW! ⚡</p>
-              </div>
-            )}
-
-            {message.type === 'fomo' && (
-              <div className="mt-4 bg-amber-600/30 rounded-lg p-3 border border-amber-500/50">
-                <p className="text-center font-bold">🔥 DON'T GET LEFT BEHIND! 🔥</p>
-              </div>
-            )}
+            {/* Action button with appropriate styling */}
+            <div className={`rounded-lg p-3 border-2 text-center ${
+              message.type === 'urgent' || message.type === 'fomo' || message.type === 'reassignment'
+                ? 'bg-red-800/40 border-red-300'
+                : message.type === 'celebration'
+                ? 'bg-green-800/40 border-green-300' 
+                : 'bg-yellow-700/40 border-yellow-300'
+            }`}>
+              <p className={`font-bold ${getTextColor()}`}>
+                {getActionText()}
+              </p>
+            </div>
           </div>
         </div>
       </div>

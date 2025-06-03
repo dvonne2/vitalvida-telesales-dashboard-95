@@ -8,7 +8,7 @@ interface Achievement {
   title: string;
   message: string;
   type: 'milestone' | 'bonus' | 'streak' | 'target';
-  naira: number; // Changed from points to naira
+  naira: number;
 }
 
 interface AchievementNotificationProps {
@@ -24,21 +24,21 @@ export const AchievementNotification = ({ achievement, onDismiss }: AchievementN
     if (achievement) {
       setIsVisible(true);
       
-      // Play appropriate sound based on achievement type
+      // Play appropriate sound based on achievement type and amount
       if (achievement.type === 'bonus') {
         if (achievement.naira >= 5000) {
-          playSound('airhorn'); // Big milestone
+          playSound('airhorn'); // Big milestone - 🔴 RED level excitement
         } else {
-          playSound('cash_register'); // Regular bonus
+          playSound('cash_register'); // Regular bonus - 🟢 GREEN success
         }
       } else {
-        playSound('celebration');
+        playSound('celebration'); // 🟢 GREEN success sound
       }
       
       const timer = setTimeout(() => {
         setIsVisible(false);
         setTimeout(onDismiss, 300);
-      }, 4000);
+      }, 5000); // Show longer for achievements
       
       return () => clearTimeout(timer);
     }
@@ -48,47 +48,65 @@ export const AchievementNotification = ({ achievement, onDismiss }: AchievementN
 
   const getIcon = () => {
     switch (achievement.type) {
-      case 'milestone': return <Trophy className="w-7 h-7 text-amber-500" />;
-      case 'bonus': return <DollarSign className="w-7 h-7 text-emerald-600" />;
-      case 'streak': return <Zap className="w-7 h-7 text-blue-600" />;
-      case 'target': return <Target className="w-7 h-7 text-rose-600" />;
+      case 'milestone': return <Trophy className="w-7 h-7 text-white" />;
+      case 'bonus': return <DollarSign className="w-7 h-7 text-white" />;
+      case 'streak': return <Zap className="w-7 h-7 text-white" />;
+      case 'target': return <Target className="w-7 h-7 text-white" />;
     }
   };
 
   const getBgColor = () => {
+    // All achievements are success/praise = 🟢 GREEN
     switch (achievement.type) {
-      case 'milestone': return 'from-amber-600 to-orange-700';
-      case 'bonus': return 'from-emerald-600 to-green-700';
-      case 'streak': return 'from-blue-600 to-indigo-700';
-      case 'target': return 'from-rose-600 to-pink-700';
+      case 'milestone': return 'from-green-600 to-green-700';
+      case 'bonus': 
+        // Big bonuses get more excitement
+        return achievement.naira >= 5000 
+          ? 'from-green-500 to-emerald-600' 
+          : 'from-green-600 to-green-700';
+      case 'streak': return 'from-green-600 to-green-700';
+      case 'target': return 'from-green-600 to-green-700';
     }
+  };
+
+  const getEmoji = () => {
+    if (achievement.naira >= 5000) return '🎉🔥'; // Big money
+    if (achievement.naira >= 1000) return '💰🎉'; // Good money
+    return '✅👏'; // Regular success
   };
 
   return (
     <div className="fixed top-4 right-4 z-50">
-      <div className={`transform transition-all duration-300 ${isVisible ? 'translate-x-0 opacity-100 scale-100' : 'translate-x-full opacity-0 scale-95'}`}>
-        <div className={`bg-gradient-to-r ${getBgColor()} rounded-xl p-6 text-white shadow-xl max-w-sm border border-white/20`}>
+      <div className={`transform transition-all duration-300 ${
+        isVisible ? 'translate-x-0 opacity-100 scale-100' : 'translate-x-full opacity-0 scale-95'
+      }`}>
+        <div className={`bg-gradient-to-r ${getBgColor()} rounded-xl p-6 text-white shadow-xl max-w-sm border-4 border-green-300`}>
           <div className="flex items-start justify-between mb-3">
             <div className="flex items-center gap-3">
               {getIcon()}
               <div>
-                <h3 className="font-bold text-lg">🎉 ACHIEVEMENT!</h3>
-                <p className="text-white/90 text-sm">{achievement.title}</p>
+                <h3 className="font-bold text-lg text-white">
+                  {getEmoji()} YOU DID AM WELL!
+                </h3>
+                <p className="text-green-100 text-sm">{achievement.title}</p>
               </div>
             </div>
             <button 
               onClick={() => setIsVisible(false)}
-              className="text-white/70 hover:text-white transition-colors"
+              className="text-green-100 hover:text-white transition-colors"
             >
               <X className="w-4 h-4" />
             </button>
           </div>
           
-          <p className="text-white/90 mb-4">{achievement.message}</p>
+          <p className="text-green-100 mb-4">{achievement.message}</p>
           
-          <div className="bg-white/20 rounded-lg p-3 text-center">
-            <div className="text-xl font-bold text-amber-200">
-              +₦{achievement.naira} EARNED! 🔥
+          <div className="bg-green-800/40 rounded-lg p-3 text-center border-2 border-green-300">
+            <div className="text-xl font-bold text-green-100">
+              +₦{achievement.naira} ENTER YOUR ACCOUNT! 🏦
+            </div>
+            <div className="text-sm text-green-200 mt-1">
+              💪 You dey try! Do more, get more!
             </div>
           </div>
         </div>

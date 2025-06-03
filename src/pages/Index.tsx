@@ -49,66 +49,68 @@ const Index = () => {
       </div>
 
       <div className="p-4 space-y-6 pb-24">
-        {/* 1. Today's Mission Card */}
+        {/* 1. Today's Mission Card - Can be RED or GREEN based on urgency */}
         <TodayMissionCard />
         
-        {/* 2-4. KPI Cards in 3 rows */}
+        {/* ROW 1: Performance Summary - 🟢 GREEN + 🔵 BLUE (calm & proud) */}
         <KPICardsRow 
-          title="📦 ORDER PERFORMANCE" 
+          title="📈 PERFORMANCE SUMMARY" 
           cards={[
-            { title: "Today's Orders", value: "8/12", subtitle: "Assigned / Delivered", color: "bg-blue-500" },
-            { title: "This Week", value: "32/45", subtitle: "Orders closed", color: "bg-purple-500" },
+            { title: "Today's Orders", value: "8/12", subtitle: "Assigned / Delivered", color: "bg-green-500" },
+            { title: "This Week", value: "32/45", subtitle: "Orders closed", color: "bg-blue-500" },
             { title: "This Month", value: "110/150", subtitle: "Target progress", color: "bg-indigo-500" }
           ]}
         />
 
+        {/* ROW 2: Bonus & Urgency - 🟡 YELLOW + 🔴 RED (reward + action) */}
         <KPICardsRow 
-          title="💰 BONUS & RESPONSE" 
+          title="💰 BONUS & URGENT ACTIONS" 
           cards={[
-            { title: "Daily Bonus", value: "₦3,800", subtitle: "You dey try! 🔥", color: "bg-green-500" },
-            { title: "Weekly Bonus", value: "₦14,200", subtitle: "Money dey come!", color: "bg-yellow-500" },
-            { title: "Avg Response", value: "7 mins", subtitle: "After assignment", color: "bg-orange-500" }
+            { title: "Daily Bonus", value: "₦3,800", subtitle: "You dey try! 🔥", color: "bg-yellow-500" },
+            { title: "Weekly Bonus", value: "₦14,200", subtitle: "Money dey come!", color: "bg-yellow-600" },
+            { title: "Avg Response", value: "7 mins", subtitle: "Speed up small!", color: "bg-orange-500" }
           ]}
         />
 
+        {/* ROW 3: Insights & Delivery - 🔵 BLUE + 🟢 GREEN (feedback & success) */}
         <KPICardsRow 
-          title="🚚 DELIVERY PERFORMANCE" 
+          title="🚚 DELIVERY & SUCCESS" 
           cards={[
-            { title: "Fast Delivery", value: "15", subtitle: "Orders <6hrs", color: "bg-teal-500" },
-            { title: "Today's Rate", value: "67%", subtitle: "Delivery success", color: "bg-cyan-500" },
-            { title: "Week's Rate", value: "74%", subtitle: "Keep pushing!", color: "bg-sky-500" }
+            { title: "Fast Delivery", value: "15", subtitle: "Orders <6hrs", color: "bg-blue-500" },
+            { title: "Today's Rate", value: "67%", subtitle: "Delivery success", color: "bg-green-500" },
+            { title: "Week's Rate", value: "74%", subtitle: "Keep pushing!", color: "bg-green-600" }
           ]}
         />
 
-        {/* Orders in Progress - Moved here for urgency */}
+        {/* Orders in Progress - HIGH PRIORITY - RED/GREEN tiered system */}
         <OrdersInProgress />
 
-        {/* 5. Glowing Bonus Progress Bar */}
+        {/* 🟡 YELLOW - Glowing Bonus Progress Bar */}
         <BonusProgressBar />
 
-        {/* 6. Agent Audit Card */}
+        {/* ⚫️ GRAY - Agent Audit Card (neutral/informational) */}
         <AgentAuditCard />
 
-        {/* 7. Your Orders Table */}
+        {/* Your Orders Table */}
         <OrdersTable />
 
-        {/* 9. Follow-Up Zone */}
+        {/* Follow-Up Zone */}
         <FollowUpZone />
 
-        {/* 10. Sales Forecast Card */}
+        {/* Sales Forecast Card */}
         <SalesForecastCard />
 
-        {/* 11. Referral & Recruit Tracker */}
+        {/* Referral & Recruit Tracker */}
         <ReferralTracker />
 
-        {/* 12. Street Smart Learning Strip */}
+        {/* Street Smart Learning Strip */}
         <LearningStrip />
 
-        {/* 14. End of Day Wrap Card */}
+        {/* End of Day Wrap Card */}
         {isEndOfDay && <EndOfDayCard />}
       </div>
 
-      {/* 13. Live Social Feed - Fixed at bottom */}
+      {/* Live Social Feed - Fixed at bottom */}
       <LiveSocialFeed />
     </div>
   );
