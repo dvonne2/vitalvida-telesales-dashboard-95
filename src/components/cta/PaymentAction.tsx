@@ -63,13 +63,13 @@ export const PaymentAction = ({
   return (
     <ErrorBoundary>
       <ActionButton
-        title="💰 PAYMENT"
+        title="💰 Upload Payment Proof"
         icon={DollarSign}
         iconColor="text-green-600"
         status={status}
         onClick={handlePaymentConfirmed}
         disabled={disabled}
-        buttonText="💰 Confirm Payment"
+        buttonText="📤 Upload Payment Proof"
         completedText="✅ Confirmed"
         variant="success"
         countdown={countdown}

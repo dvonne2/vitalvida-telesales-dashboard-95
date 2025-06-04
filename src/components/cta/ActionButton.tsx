@@ -47,7 +47,7 @@ export const ActionButton = ({
         <div className="flex items-center gap-2">
           <Icon className={`w-4 h-4 ${iconColor}`} />
           <span className="font-semibold text-sm">{title}</span>
-          <StatusIcon className={`w-4 h-4 ${statusIconColor}`} />
+          {StatusIcon && <StatusIcon className={`w-4 h-4 ${statusIconColor}`} />}
           <span className="text-lg">{statusEmoji}</span>
         </div>
         {countdown && (

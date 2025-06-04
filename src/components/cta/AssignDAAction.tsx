@@ -63,13 +63,13 @@ export const AssignDAAction = ({
   return (
     <ErrorBoundary>
       <ActionButton
-        title="🚚 ASSIGN DA"
+        title="🚚 Upload Proof of DA Assignment"
         icon={Truck}
         iconColor="text-purple-600"
         status={status}
         onClick={handleAssignDA}
         disabled={disabled}
-        buttonText="🚚 Assign DA"
+        buttonText="📤 Upload DA Proof"
         completedText="✅ Assigned"
         variant="primary"
         countdown={countdown}

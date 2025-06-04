@@ -1,5 +1,5 @@
 
-import { CheckCircle, AlertCircle, Clock } from 'lucide-react';
+import { CheckCircle, AlertCircle } from 'lucide-react';
 
 export type ActionStatus = 'pending' | 'completed' | 'failed';
 
@@ -14,7 +14,7 @@ export const getStatusIcon = (status: ActionStatus) => {
   switch (status) {
     case 'completed': return CheckCircle;
     case 'failed': return AlertCircle;
-    default: return Clock;
+    default: return null; // Remove static clock icon for pending
   }
 };
 
