@@ -62,8 +62,6 @@ export const InteractiveButton = ({
         ${getVariantClasses()}
         ${getSizeClasses()}
         font-semibold rounded-lg shadow-md
-        transform transition-all duration-150
-        ${isClicked ? 'scale-95 shadow-sm' : 'scale-100 hover:scale-105 hover:shadow-lg'}
         ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
         relative overflow-hidden
         ${className}
