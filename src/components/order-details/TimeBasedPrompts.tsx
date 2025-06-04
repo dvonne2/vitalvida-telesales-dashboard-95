@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Clock, Phone, Upload, Truck, DollarSign, Shield } from 'lucide-react';
+import { Phone, Upload, Truck, DollarSign, Shield } from 'lucide-react';
 import { InteractiveButton } from '../InteractiveButton';
 import { useSoundEffects } from '../../hooks/useSoundEffects';
 
@@ -28,7 +28,7 @@ interface TimeBasedPrompt {
   whisper: string;
   soundType: 'alert_ping' | 'success' | 'whoosh' | 'cash_register';
   isActive: boolean;
-  timeRemaining?: string;
+  countdown?: string;
 }
 
 export const TimeBasedPrompts = ({ 
@@ -42,7 +42,7 @@ export const TimeBasedPrompts = ({
   const [currentTime, setCurrentTime] = useState(new Date());
   const { playSound } = useSoundEffects();
 
-  const promptTemplates: Omit<TimeBasedPrompt, 'isActive' | 'timeRemaining'>[] = [
+  const promptTemplates: Omit<TimeBasedPrompt, 'isActive' | 'countdown'>[] = [
     {
       id: 'call',
       type: 'call',
@@ -102,6 +102,22 @@ export const TimeBasedPrompts = ({
     return () => clearInterval(interval);
   }, []);
 
+  const formatCountdown = (seconds: number): string => {
+    if (seconds <= 0) return "NOW!";
+    
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+    
+    if (hours > 0) {
+      return `${hours}h ${minutes}m ${secs}s`;
+    } else if (minutes > 0) {
+      return `${minutes}m ${secs}s`;
+    } else {
+      return `${secs}s`;
+    }
+  };
+
   useEffect(() => {
     const now = currentTime;
     const timeSinceAssigned = Math.floor((now.getTime() - orderAssignedTime.getTime()) / (1000 * 60)); // minutes
@@ -111,51 +127,40 @@ export const TimeBasedPrompts = ({
 
     promptTemplates.forEach(template => {
       let shouldShow = false;
-      let timeRemaining = '';
+      let countdown = '';
 
       // Check if prompt should be active based on timing and action state
       if (template.type === 'call' && actionStates.call === 'pending') {
-        const timeToTrigger = template.triggerMinutes - timeSinceAssigned;
-        if (timeToTrigger <= 0) {
-          shouldShow = true;
-        } else {
-          timeRemaining = `${Math.ceil(timeToTrigger)} min remaining`;
-        }
+        const secondsToTrigger = (template.triggerMinutes * 60) - (timeSinceAssigned * 60);
+        shouldShow = true;
+        countdown = formatCountdown(Math.max(0, secondsToTrigger));
       } else if (template.type === 'upload' && actionStates.call === 'completed' && actionStates.upload === 'pending') {
-        const timeToTrigger = template.triggerMinutes - timeSinceAssigned;
-        if (timeToTrigger <= 0) {
-          shouldShow = true;
-        } else {
-          timeRemaining = `${Math.ceil(timeToTrigger)} min remaining`;
-        }
+        const secondsToTrigger = (template.triggerMinutes * 60) - (timeSinceAssigned * 60);
+        shouldShow = true;
+        countdown = formatCountdown(Math.max(0, secondsToTrigger));
       } else if (template.type === 'assign_da' && actionStates.upload === 'completed' && actionStates.assign === 'pending') {
-        const timeToTrigger = template.triggerMinutes - timeSinceAssigned;
-        if (timeToTrigger <= 0) {
-          shouldShow = true;
-        } else {
-          timeRemaining = `${Math.ceil(timeToTrigger)} min remaining`;
-        }
+        const secondsToTrigger = (template.triggerMinutes * 60) - (timeSinceAssigned * 60);
+        shouldShow = true;
+        countdown = formatCountdown(Math.max(0, secondsToTrigger));
       } else if (template.type === 'payment' && actionStates.assign === 'completed' && actionStates.payment === 'pending') {
-        if (hoursSinceAssigned >= 5 && hoursSinceAssigned <= 10) {
+        if (hoursSinceAssigned <= 10) {
+          const secondsToTrigger = (template.triggerMinutes * 60) - (timeSinceAssigned * 60);
           shouldShow = true;
-        } else if (hoursSinceAssigned < 5) {
-          const hoursRemaining = 5 - hoursSinceAssigned;
-          timeRemaining = `${Math.ceil(hoursRemaining * 60)} min remaining`;
+          countdown = formatCountdown(Math.max(0, secondsToTrigger));
         }
       } else if (template.type === 'otp' && actionStates.assign === 'completed') {
-        if (hoursSinceAssigned >= 5.5 && hoursSinceAssigned <= 10) {
+        if (hoursSinceAssigned <= 10) {
+          const secondsToTrigger = (template.triggerMinutes * 60) - (timeSinceAssigned * 60);
           shouldShow = true;
-        } else if (hoursSinceAssigned < 5.5) {
-          const hoursRemaining = 5.5 - hoursSinceAssigned;
-          timeRemaining = `${Math.ceil(hoursRemaining * 60)} min remaining`;
+          countdown = formatCountdown(Math.max(0, secondsToTrigger));
         }
       }
 
-      if (shouldShow || timeRemaining) {
+      if (shouldShow) {
         newActivePrompts.push({
           ...template,
-          isActive: shouldShow,
-          timeRemaining
+          isActive: countdown === "NOW!",
+          countdown
         });
       }
     });
@@ -174,19 +179,11 @@ export const TimeBasedPrompts = ({
     }
   };
 
-  const formatTimeRemaining = (timeStr: string) => {
-    if (timeStr.includes('min')) {
-      return `⏰ ${timeStr}`;
-    }
-    return timeStr;
-  };
-
   if (activePrompts.length === 0) return null;
 
   return (
     <div className="space-y-3">
       <h3 className="font-bold text-gray-900 text-center flex items-center justify-center gap-2">
-        <Clock className="w-4 h-4" />
         ⏰ TIME-BASED PROMPTS
       </h3>
       
@@ -207,9 +204,11 @@ export const TimeBasedPrompts = ({
               <span className={`font-bold text-sm ${prompt.isActive ? 'text-red-700' : 'text-gray-600'}`}>
                 {prompt.title}
               </span>
-              {prompt.timeRemaining && (
-                <span className="text-xs text-gray-500 ml-auto">
-                  {formatTimeRemaining(prompt.timeRemaining)}
+              {prompt.countdown && (
+                <span className={`text-xs ml-auto font-mono ${
+                  prompt.isActive ? 'text-red-600 font-bold' : 'text-gray-500'
+                }`}>
+                  {prompt.countdown}
                 </span>
               )}
             </div>
