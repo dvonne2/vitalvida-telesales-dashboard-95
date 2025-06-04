@@ -12,6 +12,7 @@ interface PaymentActionProps {
   disabled: boolean;
   orderId: string;
   customerName: string;
+  countdown?: string;
   onUpdateStatus: (status: ActionStatus) => void;
   onDisableButton: () => void;
   onShowWhisper: (type: string | null) => void;
@@ -23,6 +24,7 @@ export const PaymentAction = ({
   disabled,
   orderId,
   customerName,
+  countdown,
   onUpdateStatus,
   onDisableButton,
   onShowWhisper,
@@ -32,6 +34,8 @@ export const PaymentAction = ({
   const { playSound } = useSoundEffects();
 
   console.log('PaymentAction render:', { orderId, status, disabled, showPaymentUploadModal });
+
+  const isCountdownActive = countdown === "NOW!";
 
   const handlePaymentConfirmed = () => {
     if (disabled) {
@@ -68,6 +72,9 @@ export const PaymentAction = ({
         buttonText="💰 Confirm Payment"
         completedText="✅ Confirmed"
         variant="success"
+        countdown={countdown}
+        isCountdownActive={isCountdownActive}
+        whisperMessage={isCountdownActive ? "If dem don pay, confirm am sharp sharp." : undefined}
       />
 
       <ErrorBoundary>

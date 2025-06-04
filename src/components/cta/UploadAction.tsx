@@ -10,6 +10,7 @@ interface UploadActionProps {
   status: ActionStatus;
   disabled: boolean;
   orderId: string;
+  countdown?: string;
   onUpdateStatus: (status: ActionStatus) => void;
   onDisableButton: () => void;
   onShowWhisper: (type: string | null) => void;
@@ -20,6 +21,7 @@ export const UploadAction = ({
   status,
   disabled,
   orderId,
+  countdown,
   onUpdateStatus,
   onDisableButton,
   onShowWhisper,
@@ -27,6 +29,8 @@ export const UploadAction = ({
 }: UploadActionProps) => {
   const [showUploadModal, setShowUploadModal] = useState(false);
   const { playSound } = useSoundEffects();
+
+  const isCountdownActive = countdown === "NOW!";
 
   const handleUploadProof = () => {
     if (disabled) return;
@@ -60,6 +64,9 @@ export const UploadAction = ({
         buttonText="📤 Upload Proof"
         completedText="✅ Uploaded"
         variant="success"
+        countdown={countdown}
+        isCountdownActive={isCountdownActive}
+        whisperMessage={isCountdownActive ? "No proof, no pay. Upload fast!" : undefined}
       />
 
       {/* Upload Modal for Call Proof */}

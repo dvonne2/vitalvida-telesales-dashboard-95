@@ -5,6 +5,7 @@ import { UploadAction } from './cta/UploadAction';
 import { AssignDAAction } from './cta/AssignDAAction';
 import { PaymentAction } from './cta/PaymentAction';
 import { ActionState, whisperMessages } from '../utils/ctaUtils';
+import { formatCountdown } from './order-details/utils/timeUtils';
 import { ErrorBoundary } from './ErrorBoundary';
 
 interface CTAPanelProps {
@@ -12,10 +13,18 @@ interface CTAPanelProps {
   customerName: string;
   phone: string;
   product: string;
+  orderAssignedTime: Date;
   onActionComplete: (action: string, orderId: string) => void;
 }
 
-export const CTAPanel = ({ orderId, customerName, phone, product, onActionComplete }: CTAPanelProps) => {
+export const CTAPanel = ({ 
+  orderId, 
+  customerName, 
+  phone, 
+  product, 
+  orderAssignedTime,
+  onActionComplete 
+}: CTAPanelProps) => {
   const [actionStates, setActionStates] = useState<ActionState>({
     call: 'pending',
     upload: 'pending',
@@ -26,6 +35,7 @@ export const CTAPanel = ({ orderId, customerName, phone, product, onActionComple
   const [activeAction, setActiveAction] = useState<string | null>(null);
   const [disabledButtons, setDisabledButtons] = useState<Set<string>>(new Set());
   const [showWhisper, setShowWhisper] = useState<string | null>(null);
+  const [currentTime, setCurrentTime] = useState(new Date());
 
   console.log('CTAPanel render:', { 
     orderId, 
@@ -36,12 +46,28 @@ export const CTAPanel = ({ orderId, customerName, phone, product, onActionComple
     showWhisper 
   });
 
+  // Update current time every second for countdown
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
   useEffect(() => {
     console.log('CTAPanel mounted for order:', orderId);
     return () => {
       console.log('CTAPanel unmounting for order:', orderId);
     };
   }, [orderId]);
+
+  // Calculate countdown timers for each action
+  const getActionCountdown = (triggerMinutes: number) => {
+    const timeSinceAssigned = Math.floor((currentTime.getTime() - orderAssignedTime.getTime()) / 1000); // seconds
+    const secondsToTrigger = (triggerMinutes * 60) - timeSinceAssigned;
+    return formatCountdown(Math.max(0, secondsToTrigger));
+  };
 
   const updateActionStatus = (action: keyof ActionState, status: ActionState[keyof ActionState]) => {
     console.log('CTAPanel: Updating action status:', { action, status, orderId });
@@ -84,6 +110,7 @@ export const CTAPanel = ({ orderId, customerName, phone, product, onActionComple
               phone={phone}
               orderId={orderId}
               disabled={disabledButtons.has('call')}
+              countdown={actionStates.call === 'pending' ? getActionCountdown(10) : undefined}
               onSetActiveAction={setActiveAction}
               onUpdateStatus={(status) => updateActionStatus('call', status)}
               onDisableButton={() => disableButtonTemporarily('call')}
@@ -97,6 +124,7 @@ export const CTAPanel = ({ orderId, customerName, phone, product, onActionComple
               status={actionStates.upload}
               disabled={disabledButtons.has('upload')}
               orderId={orderId}
+              countdown={actionStates.call === 'completed' && actionStates.upload === 'pending' ? getActionCountdown(15) : undefined}
               onUpdateStatus={(status) => updateActionStatus('upload', status)}
               onDisableButton={() => disableButtonTemporarily('upload')}
               onShowWhisper={setShowWhisper}
@@ -109,6 +137,7 @@ export const CTAPanel = ({ orderId, customerName, phone, product, onActionComple
             disabled={disabledButtons.has('assign')}
             orderId={orderId}
             customerName={customerName}
+            countdown={actionStates.upload === 'completed' && actionStates.assign === 'pending' ? getActionCountdown(20) : undefined}
             onUpdateStatus={(status) => updateActionStatus('assign', status)}
             onDisableButton={() => disableButtonTemporarily('assign')}
             onShowWhisper={setShowWhisper}
@@ -120,6 +149,7 @@ export const CTAPanel = ({ orderId, customerName, phone, product, onActionComple
             disabled={disabledButtons.has('payment')}
             orderId={orderId}
             customerName={customerName}
+            countdown={actionStates.assign === 'completed' && actionStates.payment === 'pending' ? getActionCountdown(300) : undefined}
             onUpdateStatus={(status) => updateActionStatus('payment', status)}
             onDisableButton={() => disableButtonTemporarily('payment')}
             onShowWhisper={setShowWhisper}

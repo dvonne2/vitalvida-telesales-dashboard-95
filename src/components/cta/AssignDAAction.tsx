@@ -12,6 +12,7 @@ interface AssignDAActionProps {
   disabled: boolean;
   orderId: string;
   customerName: string;
+  countdown?: string;
   onUpdateStatus: (status: ActionStatus) => void;
   onDisableButton: () => void;
   onShowWhisper: (type: string | null) => void;
@@ -23,6 +24,7 @@ export const AssignDAAction = ({
   disabled,
   orderId,
   customerName,
+  countdown,
   onUpdateStatus,
   onDisableButton,
   onShowWhisper,
@@ -32,6 +34,8 @@ export const AssignDAAction = ({
   const { playSound } = useSoundEffects();
 
   console.log('AssignDAAction render:', { orderId, status, disabled, showDAUploadModal });
+
+  const isCountdownActive = countdown === "NOW!";
 
   const handleAssignDA = () => {
     if (disabled) {
@@ -68,6 +72,9 @@ export const AssignDAAction = ({
         buttonText="🚚 Assign DA"
         completedText="✅ Assigned"
         variant="primary"
+        countdown={countdown}
+        isCountdownActive={isCountdownActive}
+        whisperMessage={isCountdownActive ? "Fast DA = fast bonus. You dey do well!" : undefined}
       />
 
       <ErrorBoundary>

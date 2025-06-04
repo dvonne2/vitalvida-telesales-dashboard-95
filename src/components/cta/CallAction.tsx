@@ -12,6 +12,7 @@ interface CallActionProps {
   phone: string;
   orderId: string;
   disabled: boolean;
+  countdown?: string;
   onSetActiveAction: (action: string | null) => void;
   onUpdateStatus: (status: ActionStatus) => void;
   onDisableButton: () => void;
@@ -26,6 +27,7 @@ export const CallAction = ({
   phone,
   orderId,
   disabled,
+  countdown,
   onSetActiveAction,
   onUpdateStatus,
   onDisableButton,
@@ -36,6 +38,8 @@ export const CallAction = ({
   const StatusIcon = getStatusIcon(status);
   const statusIconColor = getStatusIconColor(status);
   const statusEmoji = getStatusEmoji(status);
+
+  const isCountdownActive = countdown === "NOW!";
 
   const handleCallAction = () => {
     if (disabled) return;
@@ -66,7 +70,11 @@ export const CallAction = ({
   };
 
   return (
-    <div className="bg-white rounded-lg p-3 border border-gray-200">
+    <div className={`bg-white rounded-lg p-3 border ${
+      isCountdownActive 
+        ? 'border-red-300 bg-gradient-to-r from-red-50 to-orange-50 animate-pulse' 
+        : 'border-gray-200'
+    }`}>
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
           <Phone className="w-4 h-4 text-blue-600" />
@@ -74,11 +82,24 @@ export const CallAction = ({
           <StatusIcon className={`w-4 h-4 ${statusIconColor}`} />
           <span className="text-lg">{statusEmoji}</span>
         </div>
+        {countdown && (
+          <span className={`text-xs ml-auto font-mono ${
+            isCountdownActive ? 'text-red-600 font-bold' : 'text-gray-500'
+          }`}>
+            {countdown}
+          </span>
+        )}
       </div>
       
       <div className="text-xs text-gray-600 mb-2">
         📞 Call: {customerName} – {phone}
       </div>
+
+      {isCountdownActive && (
+        <div className="bg-blue-600 text-white rounded p-2 text-xs font-medium mb-2">
+          💭 Na now be the time o! Bonus dey ride this call.
+        </div>
+      )}
 
       {activeAction === 'call' ? (
         <div className="space-y-2">
