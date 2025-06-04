@@ -77,7 +77,7 @@ export const UploadAction = ({
               <h3 className="text-lg font-bold text-red-600">🎙️ URGENT: Upload Call Recording Proof</h3>
               <button
                 onClick={() => setShowUploadModal(false)}
-                className="text-gray-500 hover:text-gray-700"
+                className="text-gray-500"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -114,7 +114,7 @@ export const UploadAction = ({
                 </InteractiveButton>
                 <button
                   onClick={() => setShowUploadModal(false)}
-                  className="px-4 py-2 text-gray-600 hover:text-gray-800 border border-gray-300 rounded"
+                  className="px-4 py-2 text-gray-600 border border-gray-300 rounded"
                 >
                   Cancel
                 </button>

@@ -36,13 +36,13 @@ export const InteractiveButton = ({
   const getVariantClasses = () => {
     switch (variant) {
       case 'primary':
-        return 'bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white';
+        return 'bg-blue-600 text-white';
       case 'success':
-        return 'bg-gradient-to-r from-emerald-600 to-green-700 hover:from-emerald-700 hover:to-green-800 text-white';
+        return 'bg-green-600 text-white';
       case 'warning':
-        return 'bg-gradient-to-r from-amber-600 to-orange-700 hover:from-amber-700 hover:to-orange-800 text-white';
+        return 'bg-orange-600 text-white';
       case 'danger':
-        return 'bg-gradient-to-r from-red-600 to-rose-700 hover:from-red-700 hover:to-rose-800 text-white';
+        return 'bg-red-600 text-white';
     }
   };
 
