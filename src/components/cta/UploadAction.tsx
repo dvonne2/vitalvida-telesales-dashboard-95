@@ -46,35 +46,35 @@ export const UploadAction = ({
     setShowUploadModal(false);
     onUpdateStatus('completed');
     onDisableButton();
-    playSound('success');
-    logAction('🎙️ CALL PROOF UPLOADED', orderId, onActionComplete);
+    playSound('camera_shutter');
+    logAction('🎙️ CALL RECORDING PROOF UPLOADED', orderId, onActionComplete);
     
-    alert('🎉 Call proof uploaded! Bonus dey cook!');
+    alert('🎉 Call recording proof uploaded! Your bonus is secured!');
   };
 
   return (
     <>
       <ActionButton
-        title="🎙️ UPLOAD CALL PROOF"
+        title="🎙️ UPLOAD CALL RECORDING PROOF"
         icon={Upload}
         iconColor="text-green-600"
         status={status}
         onClick={handleUploadProof}
         disabled={disabled}
-        buttonText="📤 Upload Call Proof"
-        completedText="✅ Call Proof Uploaded"
+        buttonText="📤 Upload Recording Proof"
+        completedText="✅ Recording Proof Uploaded"
         variant="success"
         countdown={countdown}
         isCountdownActive={isCountdownActive}
-        whisperMessage={isCountdownActive ? "No proof, no pay. Upload fast!" : undefined}
+        whisperMessage={isCountdownActive ? "NO RECORDING PROOF = NO PAY! Upload NOW!" : undefined}
       />
 
-      {/* Upload Modal for Call Proof */}
+      {/* Upload Modal for Call Recording Proof */}
       {showUploadModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-bold">🎙️ Upload Call Recorded Proof</h3>
+              <h3 className="text-lg font-bold text-red-600">🎙️ URGENT: Upload Call Recording Proof</h3>
               <button
                 onClick={() => setShowUploadModal(false)}
                 className="text-gray-500 hover:text-gray-700"
@@ -84,13 +84,23 @@ export const UploadAction = ({
             </div>
             
             <div className="space-y-4">
-              <div className="bg-blue-600 text-white rounded-lg p-3 text-sm font-medium">
-                🧠 No proof, no pay. Upload fast make alert stop.
+              <div className="bg-red-600 text-white rounded-lg p-3 text-sm font-bold animate-pulse">
+                ⚠️ NO RECORDING PROOF = NO PAY! Upload evidence that you made this call.
               </div>
               
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-                <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                <p className="text-sm text-gray-600">Upload voice note or screenshot</p>
+              <div className="bg-yellow-100 border-l-4 border-yellow-500 p-3 text-sm">
+                <p className="font-semibold text-yellow-800">Required Proof Types:</p>
+                <ul className="mt-1 text-yellow-700 text-xs">
+                  <li>• Voice note of call conversation</li>
+                  <li>• Screenshot of call duration/log</li>
+                  <li>• Photo of phone showing call record</li>
+                </ul>
+              </div>
+              
+              <div className="border-2 border-dashed border-red-300 rounded-lg p-6 text-center bg-red-50">
+                <Upload className="w-8 h-8 text-red-500 mx-auto mb-2" />
+                <p className="text-sm font-semibold text-red-700">Upload Your Call Recording Proof</p>
+                <p className="text-xs text-red-600 mt-1">Show that you actually made this call</p>
               </div>
               
               <div className="flex gap-2">
@@ -98,9 +108,9 @@ export const UploadAction = ({
                   onClick={handleUploadComplete}
                   variant="success"
                   size="lg"
-                  className="flex-1"
+                  className="flex-1 font-bold"
                 >
-                  📤 Upload & Confirm
+                  📤 UPLOAD PROOF & SECURE BONUS
                 </InteractiveButton>
                 <button
                   onClick={() => setShowUploadModal(false)}

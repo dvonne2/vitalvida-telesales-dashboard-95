@@ -50,8 +50,8 @@ export const logAction = (actionText: string, orderId: string, onActionComplete:
 };
 
 export const whisperMessages = {
-  call: '🧠 Calls are randomly monitored. Use the script. Na your bonus dey ride this call.',
-  upload: '🧠 No proof, no pay. Upload fast make alert stop.',
-  assign: '🧠 Fast DA = fast delivery = fast bonus.',
-  payment: '🧠 If them pay, your job na to prove am. Don\'t dull.'
+  call: '🧠 Calls are randomly monitored. Use the script. Your bonus depends on this call quality.',
+  upload: '🧠 NO RECORDING PROOF = NO PAY! Upload evidence that you made this call. Don\'t lose your bonus!',
+  assign: '🧠 Fast DA assignment = faster delivery = bigger bonus. Move quick!',
+  payment: '🧠 Payment confirmed? Prove it fast! Your bonus is waiting for this final step.'
 };
