@@ -8,7 +8,7 @@ interface ActionTimestamp {
   timestamp: Date;
   customer?: string;
   orderId?: string;
-  type: 'call' | 'upload' | 'assign_da' | 'check_payment' | 'confirm_delivery';
+  type: 'call' | 'upload' | 'assign_da' | 'check_payment' | 'confirm_delivery' | 'otp' | 'cta_action_complete';
 }
 
 interface ActionTimestampTrackerProps {
@@ -22,10 +22,12 @@ export const ActionTimestampTracker = ({ onActionLogged }: ActionTimestampTracke
   const logAction = (actionType: ActionTimestamp['type'], customer?: string, orderId?: string) => {
     const actionTexts = {
       call: `started calling ${customer}`,
-      upload: `clicked "Uploading voice note" for ${customer}`,
+      upload: `uploaded call proof for ${customer}`,
       assign_da: `assigned order #${orderId} to DA`,
-      check_payment: `checking payment for order #${orderId}`,
-      confirm_delivery: `confirming delivery for order #${orderId}`
+      check_payment: `checked payment for order #${orderId}`,
+      confirm_delivery: `confirmed delivery for order #${orderId}`,
+      otp: `uploaded OTP for order #${orderId}`,
+      cta_action_complete: `completed CTA action for ${customer}`
     };
 
     const newAction: ActionTimestamp = {
@@ -59,6 +61,19 @@ export const ActionTimestampTracker = ({ onActionLogged }: ActionTimestampTracke
     });
   };
 
+  const getActionEmoji = (type: ActionTimestamp['type']) => {
+    const emojis = {
+      call: '📞',
+      upload: '🎙️',
+      assign_da: '🚚',
+      check_payment: '💰',
+      confirm_delivery: '📦',
+      otp: '🔐',
+      cta_action_complete: '✅'
+    };
+    return emojis[type] || '📝';
+  };
+
   if (actions.length === 0) return null;
 
   return (
@@ -66,12 +81,14 @@ export const ActionTimestampTracker = ({ onActionLogged }: ActionTimestampTracke
       <div className="flex items-center gap-2 mb-1">
         <Eye className="w-3 h-3 text-gray-600" />
         <span className="text-xs font-medium text-gray-700">SUPERVISOR TRACKING ACTIVE</span>
+        <span className="text-xs text-gray-500">({actions.length} actions logged)</span>
       </div>
       <div className="space-y-1 max-h-20 overflow-y-auto">
         {actions.slice(-3).map((action) => (
           <div key={action.id} className="flex items-center gap-2 text-xs text-gray-600">
             <Clock className="w-3 h-3 text-gray-500" />
-            <span>🕒 You {action.action} at {formatTimestamp(action.timestamp)}</span>
+            <span>{getActionEmoji(action.type)}</span>
+            <span>You {action.action} at {formatTimestamp(action.timestamp)}</span>
           </div>
         ))}
       </div>
