@@ -86,6 +86,14 @@ export const OrdersTableWithCTA = () => {
     }
   ];
 
+  // Helper function to convert time string to Date object
+  const parseAssignedTime = (timeString: string): Date => {
+    const today = new Date();
+    const [hours, minutes] = timeString.split(':').map(Number);
+    const assignedDate = new Date(today.getFullYear(), today.getMonth(), today.getDate(), hours, minutes);
+    return assignedDate;
+  };
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'delivered': return 'bg-green-500';
@@ -195,6 +203,7 @@ export const OrdersTableWithCTA = () => {
                     customerName={order.customer}
                     phone={order.phone}
                     product={order.product}
+                    orderAssignedTime={parseAssignedTime(order.assignedTime)}
                     onActionComplete={handleCTAAction}
                   />
                 </div>
