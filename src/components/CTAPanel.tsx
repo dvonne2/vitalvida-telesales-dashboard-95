@@ -92,7 +92,7 @@ export const CTAPanel = ({
       <div className="bg-gradient-to-r from-orange-50 to-yellow-50 border border-orange-200 rounded-lg p-4 mt-3">
         {/* Whisper Coaching */}
         {showWhisper && (
-          <div className="bg-blue-600 text-white rounded-lg p-3 mb-4 text-sm font-medium animate-pulse">
+          <div className="bg-blue-600 text-white rounded-lg p-3 mb-4 text-sm font-medium">
             {whisperMessages[showWhisper as keyof typeof whisperMessages]}
           </div>
         )}

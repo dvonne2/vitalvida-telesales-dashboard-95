@@ -70,7 +70,7 @@ export const InteractiveButton = ({
       `}
     >
       {isClicked && (
-        <div className="absolute inset-0 bg-white/20 animate-pulse rounded-lg" />
+        <div className="absolute inset-0 bg-white/20 rounded-lg" />
       )}
       <span className="relative z-10">{children}</span>
     </button>

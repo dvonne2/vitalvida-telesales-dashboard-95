@@ -40,7 +40,7 @@ export const ActionButton = ({
   return (
     <div className={`bg-white rounded-lg p-3 border ${
       isCountdownActive 
-        ? 'border-red-300 bg-gradient-to-r from-red-50 to-orange-50 animate-pulse' 
+        ? 'border-red-300 bg-gradient-to-r from-red-50 to-orange-50' 
         : 'border-gray-200'
     }`}>
       <div className="flex items-center justify-between mb-2">

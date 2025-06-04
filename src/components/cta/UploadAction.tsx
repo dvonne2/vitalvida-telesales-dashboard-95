@@ -84,7 +84,7 @@ export const UploadAction = ({
             </div>
             
             <div className="space-y-4">
-              <div className="bg-red-600 text-white rounded-lg p-3 text-sm font-bold animate-pulse">
+              <div className="bg-red-600 text-white rounded-lg p-3 text-sm font-bold">
                 ⚠️ NO RECORDING PROOF = NO PAY! Upload evidence that you made this call.
               </div>
               
