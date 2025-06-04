@@ -1,9 +1,9 @@
-
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { Eye, Phone, Upload, Truck, DollarSign, Package, X } from 'lucide-react';
 import { InteractiveButton } from './InteractiveButton';
 import { useSoundEffects } from '../hooks/useSoundEffects';
+import { CTAPanel } from './CTAPanel';
 
 interface OrderDetails {
   orderId: string;
@@ -119,6 +119,13 @@ export const OrderDetailsModal = ({ isOpen, onClose, orderDetails }: OrderDetail
     onClose();
   };
 
+  const handleActionComplete = (action: string, orderId: string) => {
+    // Log the action completion
+    if ((window as any).logAgentAction) {
+      (window as any).logAgentAction('cta_action_complete', action, orderId);
+    }
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="max-w-md sm:max-w-lg max-h-[90vh] overflow-y-auto">
@@ -194,93 +201,42 @@ export const OrderDetailsModal = ({ isOpen, onClose, orderDetails }: OrderDetail
             </div>
           </div>
 
-          {/* Action Buttons */}
-          <div className="space-y-3">
-            <h3 className="font-bold text-gray-900 text-center">🟡 TAKE ACTION</h3>
-            
+          {/* CTA Panel Integration */}
+          <CTAPanel
+            orderId={orderDetails.orderId}
+            customerName={orderDetails.name}
+            phone={orderDetails.phone1}
+            product={orderDetails.product}
+            onActionComplete={handleActionComplete}
+          />
+
+          {/* OTP Input for Delivery - Keep existing functionality */}
+          <div className="space-y-2">
+            <h3 className="font-bold text-gray-900 text-center">📦 DELIVERY CONFIRMATION</h3>
+            <input
+              type="text"
+              placeholder="Enter 4-digit OTP"
+              value={otpInput}
+              onChange={(e) => setOtpInput(e.target.value.slice(0, 4))}
+              className="w-full p-3 border border-gray-300 rounded-lg text-center text-lg font-mono"
+              maxLength={4}
+            />
             <InteractiveButton
-              onClick={handleCallNow}
+              onClick={handleDeliveryOTP}
               variant="success"
               size="lg"
               className="w-full text-lg font-bold py-4"
-              disabled={currentAction === 'calling'}
+              disabled={currentAction === 'delivered' || otpInput.length !== 4}
             >
-              {currentAction === 'calling' ? (
-                '📞 CALLING NOW... (STOP TO END)'
+              {currentAction === 'delivered' ? (
+                '📦 CONFIRMING DELIVERY...'
               ) : (
-                '📞 CALL NOW'
+                '📦 DELIVERED (OTP VERIFIED)'
               )}
             </InteractiveButton>
-
-            <InteractiveButton
-              onClick={handleUploadProof}
-              variant="success"
-              size="lg"
-              className="w-full text-lg font-bold py-4"
-              disabled={currentAction === 'uploading'}
-            >
-              {currentAction === 'uploading' ? (
-                '🎙️ UPLOADING...'
-              ) : (
-                '🎙️ UPLOAD CALL PROOF'
-              )}
-            </InteractiveButton>
-
-            <InteractiveButton
-              onClick={handleAssignDA}
-              variant="success"
-              size="lg"
-              className="w-full text-lg font-bold py-4"
-              disabled={currentAction === 'assigning'}
-            >
-              {currentAction === 'assigning' ? (
-                '🚚 ASSIGNING...'
-              ) : (
-                '🚚 ASSIGN TO DA'
-              )}
-            </InteractiveButton>
-
-            <InteractiveButton
-              onClick={handlePaymentConfirmed}
-              variant="success"
-              size="lg"
-              className="w-full text-lg font-bold py-4"
-              disabled={currentAction === 'payment'}
-            >
-              {currentAction === 'payment' ? (
-                '💰 CONFIRMING...'
-              ) : (
-                '💰 PAYMENT CONFIRMED'
-              )}
-            </InteractiveButton>
-
-            {/* OTP Input for Delivery */}
-            <div className="space-y-2">
-              <input
-                type="text"
-                placeholder="Enter 4-digit OTP"
-                value={otpInput}
-                onChange={(e) => setOtpInput(e.target.value.slice(0, 4))}
-                className="w-full p-3 border border-gray-300 rounded-lg text-center text-lg font-mono"
-                maxLength={4}
-              />
-              <InteractiveButton
-                onClick={handleDeliveryOTP}
-                variant="success"
-                size="lg"
-                className="w-full text-lg font-bold py-4"
-                disabled={currentAction === 'delivered' || otpInput.length !== 4}
-              >
-                {currentAction === 'delivered' ? (
-                  '📦 CONFIRMING DELIVERY...'
-                ) : (
-                  '📦 DELIVERED (OTP VERIFIED)'
-                )}
-              </InteractiveButton>
-            </div>
           </div>
 
-          {/* Stop Call Button */}
+          {/* Stop Call Button - Keep existing functionality */}
           {currentAction === 'calling' && (
             <InteractiveButton
               onClick={() => {
