@@ -14,7 +14,10 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Routes>
+        <Routes>   import DeliveryAgent from './pages/delivery-agent';
+
+<Route path="/delivery-agent" element={<DeliveryAgent />} />
+
           <Route path="/" element={<Index />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
