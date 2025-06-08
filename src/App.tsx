@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import DeliveryAgent from "./pages/delivery-agent"; // ✅ This must be at the top
 
 const queryClient = new QueryClient();
 
@@ -14,10 +15,8 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Routes>   import DeliveryAgent from './pages/delivery-agent';
-
-<Route path="/delivery-agent" element={<DeliveryAgent />} />
-
+        <Routes>
+          <Route path="/delivery-agent" element={<DeliveryAgent />} />
           <Route path="/" element={<Index />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
